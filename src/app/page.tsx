@@ -66,8 +66,8 @@ export default function Home() {
             <div className="grid grid-cols-3 gap-3 mb-4">
                 {categories.map((category, index) => (
                     <Link href={category.href} key={index}>
-                        <Card className="bg-primary text-primary-foreground shadow-md hover:bg-primary/90 transition-colors rounded-2xl">
-                            <CardContent className="flex flex-col items-center justify-center p-2 text-center aspect-square">
+                        <Card className="bg-primary text-primary-foreground shadow-md hover:bg-primary/90 transition-colors rounded-2xl aspect-square">
+                            <CardContent className="flex flex-col items-center justify-center p-2 text-center h-full">
                                 <div className="bg-white rounded-full p-3 mb-2">
                                     {category.icon}
                                 </div>
