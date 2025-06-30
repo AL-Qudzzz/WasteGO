@@ -11,6 +11,7 @@ import {
   MapPin,
   User,
   Leaf,
+  Menu,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -46,12 +47,15 @@ const menuItems = [
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground font-sans">
-        <header className="p-4">
+        <header className="p-4 flex justify-between items-center">
             <WasteGoLogo />
+            <Button variant="ghost" size="icon" className="md:hidden">
+              <Menu className="w-6 h-6"/>
+            </Button>
         </header>
         <main className="flex-grow px-4 pb-24">
             <div className="relative h-48 rounded-2xl overflow-hidden mb-6 shadow-md">
-                <Image src="https://placehold.co/600x400.png" layout="fill" objectFit="cover" alt="Selamat Datang" data-ai-hint="recycling hands" />
+                <Image src="https://placehold.co/600x400.png" fill alt="Selamat Datang" data-ai-hint="recycling hands" className="object-cover" />
                 <div className="absolute inset-0 bg-black bg-opacity-30 flex flex-col justify-end p-4">
                     <h2 className="text-white text-3xl font-bold">Selamat Datang!</h2>
                     <p className="text-white text-sm">Kelola sampah Anda dengan mudah dan dapatkan poin reward</p>
