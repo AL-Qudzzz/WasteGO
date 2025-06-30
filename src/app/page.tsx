@@ -16,6 +16,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { BottomNav } from '@/components/layout/bottom-nav';
 
 const WasteGoLogo = () => (
     <div className="flex items-center gap-1">
@@ -42,12 +43,6 @@ const menuItems = [
   { label: 'About Us', href: '#' },
 ];
 
-const bottomNavItems = [
-    { icon: <HomeIcon className="w-6 h-6" />, label: 'Home', href: '/', active: true },
-    { icon: <MapPin className="w-6 h-6" />, label: 'Location', href: '#', active: false },
-    { icon: <User className="w-6 h-6" />, label: 'Profile', href: '/login', active: false },
-]
-
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground font-sans">
@@ -66,8 +61,8 @@ export default function Home() {
             <div className="grid grid-cols-3 gap-3 mb-4">
                 {categories.map((category, index) => (
                     <Link href={category.href} key={index}>
-                        <Card className="bg-primary text-primary-foreground shadow-md hover:bg-primary/90 transition-colors rounded-2xl aspect-square">
-                            <CardContent className="flex flex-col items-center justify-center p-2 text-center h-full">
+                        <Card className="bg-primary text-primary-foreground shadow-md hover:bg-primary/90 transition-colors rounded-2xl">
+                            <CardContent className="flex flex-col items-center justify-center p-2 text-center h-full aspect-square">
                                 <div className="bg-white rounded-full p-3 mb-2">
                                     {category.icon}
                                 </div>
@@ -97,16 +92,7 @@ export default function Home() {
             </div>
         </main>
         
-        <footer className="fixed bottom-0 left-0 right-0 bg-nav-background text-nav-foreground shadow-t-lg z-50">
-            <div className="flex justify-around items-center h-16">
-                 {bottomNavItems.map((item, index) => (
-                    <Link href={item.href} key={index} data-active={item.active} className="flex flex-col items-center justify-center text-xs text-center hover:text-white data-[active=true]:text-nav-active">
-                        {item.icon}
-                        <span>{item.label}</span>
-                    </Link>
-                ))}
-            </div>
-        </footer>
+        <BottomNav />
     </div>
   )
 }
