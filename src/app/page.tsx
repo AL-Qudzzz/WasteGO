@@ -1,41 +1,49 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Recycle, Truck, Leaf, Users } from 'lucide-react';
+import { Recycle, Truck, Award, CalendarDays, ArrowRight, Facebook, Twitter, Instagram } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
 export default function Home() {
-  const features = [
+  const howItWorks = [
     {
-      icon: <Recycle className="w-8 h-8 text-primary" />,
-      title: 'Schedule Pickups',
-      description: 'Easily schedule waste pickups from your home at your convenience.',
+      icon: <CalendarDays className="w-10 h-10 text-primary" />,
+      title: 'Schedule Pickup',
+      description: 'Choose a convenient time for us to collect your recyclable waste.',
     },
     {
-      icon: <Truck className="w-8 h-8 text-primary" />,
-      title: 'Real-time Tracking',
-      description: 'Track your pickup in real-time from scheduling to completion.',
+      icon: <Truck className="w-10 h-10 text-primary" />,
+      title: 'Waste Collection',
+      description: 'Our team will arrive on time to pick up your sorted recyclables.',
     },
     {
-      icon: <Leaf className="w-8 h-8 text-primary" />,
-      title: 'See Your Impact',
-      description: 'Understand your positive environmental impact with our personalized reports.',
-    },
-    {
-      icon: <Users className="w-8 h-8 text-primary" />,
-      title: 'Community of Recyclers',
-      description: 'Join a growing community dedicated to making a difference.',
+      icon: <Award className="w-10 h-10 text-primary" />,
+      title: 'Get Rewards',
+      description: 'Earn points for your recycling efforts and redeem exciting rewards.',
     },
   ];
 
+  const partners = [
+    { name: "Partner 1", logo: "https://placehold.co/140x70.png", hint: "company logo" },
+    { name: "Partner 2", logo: "https://placehold.co/140x70.png", hint: "company logo" },
+    { name: "Partner 3", logo: "https://placehold.co/140x70.png", hint: "company logo" },
+    { name: "Partner 4", logo: "https://placehold.co/140x70.png", hint: "company logo" },
+    { name: "Partner 5", logo: "https://placehold.co/140x70.png", hint: "company logo" },
+  ];
+
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div className="flex flex-col min-h-screen bg-background text-foreground">
       <header className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex justify-between items-center">
-          <div className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2">
             <Recycle className="w-8 h-8 text-primary" />
             <h1 className="text-2xl font-bold text-primary">WasteGo</h1>
-          </div>
+          </Link>
+          <nav className="hidden md:flex items-center gap-6">
+            <Link href="#how-it-works" className="text-sm font-medium text-muted-foreground hover:text-primary">How it Works</Link>
+            <Link href="#about" className="text-sm font-medium text-muted-foreground hover:text-primary">About Us</Link>
+            <Link href="#contact" className="text-sm font-medium text-muted-foreground hover:text-primary">Contact</Link>
+          </nav>
           <Button asChild>
             <Link href="/login">Login</Link>
           </Button>
@@ -43,74 +51,123 @@ export default function Home() {
       </header>
 
       <main className="flex-grow">
-        <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 text-center">
-          <div className="max-w-3xl mx-auto">
-            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-800 font-headline">
-              Turn Your Waste into Worth
-            </h2>
-            <p className="mt-4 text-lg md:text-xl text-muted-foreground">
-              WasteGo makes it simple to recycle your household waste, track your environmental impact, and contribute to a greener planet.
-            </p>
-            <Button asChild size="lg" className="mt-8 bg-accent hover:bg-accent/90 text-accent-foreground">
-              <Link href="/login">Get Started</Link>
-            </Button>
-          </div>
-        </section>
-
-        <section className="bg-white py-16 md:py-24">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid md:grid-cols-2 gap-12 items-center">
-                    <div>
-                        <h3 className="text-3xl font-bold text-gray-800 font-headline">How It Works</h3>
-                        <p className="mt-4 text-muted-foreground">
-                            Our process is designed for your convenience. In just a few simple steps, you can have your waste collected and on its way to being recycled.
-                        </p>
-                        <ul className="mt-6 space-y-4">
-                            <li className="flex items-start">
-                                <div className="flex-shrink-0 flex items-center justify-center h-10 w-10 rounded-full bg-primary/10 text-primary font-bold">1</div>
-                                <p className="ml-4 text-gray-600"><strong>Schedule:</strong> Log in, tell us what you have, and pick a time.</p>
-                            </li>
-                            <li className="flex items-start">
-                                <div className="flex-shrink-0 flex items-center justify-center h-10 w-10 rounded-full bg-primary/10 text-primary font-bold">2</div>
-                                <p className="ml-4 text-gray-600"><strong>Prepare:</strong> Bag your recyclables and leave them at the designated spot.</p>
-                            </li>
-                            <li className="flex items-start">
-                                <div className="flex-shrink-0 flex items-center justify-center h-10 w-10 rounded-full bg-primary/10 text-primary font-bold">3</div>
-                                <p className="ml-4 text-gray-600"><strong>Track:</strong> Our courier picks it up, and you can track the progress live.</p>
-                            </li>
-                        </ul>
-                    </div>
-                    <div className="flex items-center justify-center">
-                        <Image src="https://placehold.co/500x400.png" alt="Recycling process illustration" width={500} height={400} className="rounded-lg shadow-xl" data-ai-hint="recycling process infographic" />
-                    </div>
-                </div>
+        <section className="bg-secondary py-16 md:py-24">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div className="text-center md:text-left">
+                <h2 className="text-4xl md:text-5xl font-extrabold text-foreground font-headline">
+                  Turn Your Waste into Worth
+                </h2>
+                <p className="mt-4 text-lg md:text-xl text-muted-foreground">
+                  A new way to manage your waste and get rewards for it. Join us in making the world a greener place, one pickup at a time.
+                </p>
+                <Button asChild size="lg" className="mt-8">
+                  <Link href="/login">
+                    Schedule a Pickup
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
+              </div>
+              <div className="flex items-center justify-center">
+                <Image src="https://placehold.co/500x500.png" alt="Recycling illustration" width={500} height={500} className="rounded-lg" data-ai-hint="recycling illustration" />
+              </div>
             </div>
+          </div>
         </section>
 
-        <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+        <section id="how-it-works" className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
           <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold text-gray-800 font-headline">Why Choose WasteGo?</h3>
-            <p className="mt-2 text-muted-foreground">We provide a seamless experience for a sustainable lifestyle.</p>
+            <h3 className="text-3xl font-bold text-foreground font-headline">How It Works</h3>
+            <p className="mt-2 text-muted-foreground">A simple three-step process to get you started.</p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => (
-              <Card key={index} className="text-center bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <CardHeader className="flex items-center justify-center">
-                  {feature.icon}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {howItWorks.map((step, index) => (
+              <Card key={index} className="text-center bg-card border-none shadow-lg hover:shadow-xl transition-shadow duration-300 p-6">
+                <CardHeader className="flex items-center justify-center p-0 mb-4">
+                  <div className="bg-secondary p-4 rounded-full">
+                    {step.icon}
+                  </div>
                 </CardHeader>
-                <CardContent>
-                  <CardTitle className="text-xl font-semibold text-gray-800">{feature.title}</CardTitle>
-                  <p className="mt-2 text-muted-foreground">{feature.description}</p>
+                <CardContent className="p-0">
+                  <CardTitle className="text-xl font-semibold text-foreground">{step.title}</CardTitle>
+                  <p className="mt-2 text-muted-foreground">{step.description}</p>
                 </CardContent>
               </Card>
             ))}
           </div>
         </section>
+
+        <section id="about" className="bg-secondary py-16 md:py-24">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div className="flex items-center justify-center">
+                <Image src="https://placehold.co/500x400.png" alt="Team photo" width={500} height={400} className="rounded-lg shadow-xl" data-ai-hint="diverse team smiling" />
+              </div>
+              <div>
+                <h3 className="text-3xl font-bold text-foreground font-headline">About Us</h3>
+                <p className="mt-4 text-muted-foreground">
+                  WasteGo was founded with a simple mission: to make recycling accessible, rewarding, and impactful. We believe that collective small actions can lead to significant environmental change. Our platform connects households with local recycling partners, streamlining the process and creating a community dedicated to sustainability.
+                </p>
+                 <Button asChild variant="link" className="mt-4 px-0">
+                  <Link href="#">
+                    Learn More <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="partners" className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+            <div className="text-center mb-12">
+                <h3 className="text-3xl font-bold text-foreground font-headline">Our Partners</h3>
+                <p className="mt-2 text-muted-foreground">We are proud to collaborate with organizations committed to a sustainable future.</p>
+            </div>
+            <div className="flex flex-wrap justify-center items-center gap-8">
+                {partners.map((partner) => (
+                    <Image key={partner.name} src={partner.logo} alt={partner.name} width={140} height={70} className="grayscale hover:grayscale-0 transition-all" data-ai-hint={partner.hint} />
+                ))}
+            </div>
+        </section>
       </main>
 
-      <footer className="bg-gray-800 text-white">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center">
-          <p>&copy; {new Date().getFullYear()} WasteGo. All rights reserved.</p>
+      <footer id="contact" className="bg-foreground text-background">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <Link href="/" className="flex items-center gap-2 mb-4">
+                        <Recycle className="w-8 h-8 text-primary" />
+                        <h1 className="text-2xl font-bold">WasteGo</h1>
+                    </Link>
+                    <p className="text-sm text-background/80">Turn your waste into worth.</p>
+                </div>
+                <div>
+                    <h4 className="font-semibold mb-4 text-background">Company</h4>
+                    <ul className="space-y-2">
+                        <li><Link href="#about" className="text-sm text-background/80 hover:text-primary">About Us</Link></li>
+                        <li><Link href="#contact" className="text-sm text-background/80 hover:text-primary">Contact</Link></li>
+                        <li><Link href="#" className="text-sm text-background/80 hover:text-primary">Careers</Link></li>
+                    </ul>
+                </div>
+                 <div>
+                    <h4 className="font-semibold mb-4 text-background">Legal</h4>
+                    <ul className="space-y-2">
+                        <li><Link href="#" className="text-sm text-background/80 hover:text-primary">Privacy Policy</Link></li>
+                        <li><Link href="#" className="text-sm text-background/80 hover:text-primary">Terms of Service</Link></li>
+                    </ul>
+                </div>
+                <div>
+                     <h4 className="font-semibold mb-4 text-background">Follow Us</h4>
+                     <div className="flex gap-4">
+                        <Link href="#"><Facebook className="h-6 w-6 text-background/80 hover:text-primary" /></Link>
+                        <Link href="#"><Twitter className="h-6 w-6 text-background/80 hover:text-primary" /></Link>
+                        <Link href="#"><Instagram className="h-6 w-6 text-background/80 hover:text-primary" /></Link>
+                     </div>
+                </div>
+            </div>
+            <div className="mt-8 border-t border-background/20 pt-6 text-center text-sm text-background/80">
+                <p>&copy; {new Date().getFullYear()} WasteGo. All rights reserved.</p>
+            </div>
         </div>
       </footer>
     </div>

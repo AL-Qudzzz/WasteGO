@@ -8,30 +8,30 @@ body {
 
 @layer base {
   :root {
-    --background: 43 56% 95%; /* #FAF5E9 */
-    --foreground: 20 14% 14%;
-    --card: 43 56% 95%;
-    --card-foreground: 20 14% 14%;
-    --popover: 43 56% 95%;
-    --popover-foreground: 20 14% 14%;
-    --primary: 136 30% 30%; /* #386641 */
-    --primary-foreground: 43 56% 95%;
-    --secondary: 136 15% 90%;
-    --secondary-foreground: 136 30% 30%;
-    --muted: 136 15% 90%;
-    --muted-foreground: 136 15% 45%;
-    --accent: 0 31% 50%; /* #A75D5D */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 20%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 20%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 20%;
+    --primary: 93 35% 48%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 120 25% 97%;
+    --secondary-foreground: 93 35% 48%;
+    --muted: 0 0% 95%;
+    --muted-foreground: 0 0% 40%;
+    --accent: 93 35% 48%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 136 15% 85%;
-    --input: 136 15% 85%;
-    --ring: 136 30% 30%;
-    --chart-1: 136 30% 30%;
-    --chart-2: 0 31% 50%;
-    --chart-3: 136 20% 50%;
-    --chart-4: 0 20% 70%;
-    --chart-5: 136 10% 60%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 93 35% 48%;
+    --chart-1: 93 35% 48%;
+    --chart-2: 93 45% 58%;
+    --chart-3: 93 25% 38%;
+    --chart-4: 93 55% 68%;
+    --chart-5: 93 15% 28%;
     --radius: 0.5rem;
     --sidebar-background: 136 20% 88%;
     --sidebar-foreground: 136 30% 20%;
@@ -49,24 +49,24 @@ body {
     --card-foreground: 43 20% 95%;
     --popover: 136 5% 10%;
     --popover-foreground: 43 20% 95%;
-    --primary: 136 30% 70%; /* Lighter green for dark mode */
-    --primary-foreground: 136 30% 10%;
-    --secondary: 136 10% 20%;
-    --secondary-foreground: 136 30% 80%;
+    --primary: 93 35% 68%;
+    --primary-foreground: 93 35% 10%;
+    --secondary: 120 10% 12%;
+    --secondary-foreground: 93 35% 78%;
     --muted: 136 10% 20%;
     --muted-foreground: 136 10% 60%;
-    --accent: 0 40% 65%; /* Lighter orange for dark mode */
-    --accent-foreground: 0 0% 0%;
+    --accent: 93 35% 68%;
+    --accent-foreground: 93 35% 10%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     --border: 136 10% 25%;
     --input: 136 10% 25%;
-    --ring: 136 30% 70%;
-    --chart-1: 136 30% 70%;
-    --chart-2: 0 40% 65%;
-    --chart-3: 136 20% 50%;
-    --chart-4: 0 20% 70%;
-    --chart-5: 136 10% 60%;
+    --ring: 93 35% 68%;
+    --chart-1: 93 35% 68%;
+    --chart-2: 93 45% 78%;
+    --chart-3: 93 25% 58%;
+    --chart-4: 93 55% 88%;
+    --chart-5: 93 15% 48%;
     --sidebar-background: 136 5% 12%;
     --sidebar-foreground: 43 20% 90%;
     --sidebar-primary: 136 30% 70%;
