@@ -1,13 +1,13 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormStatus } from "react-dom";
 import { getImpactSummary } from "@/lib/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Leaf, Trees, Droplets, Zap, Loader2 } from "lucide-react";
-import { useEffect } from "react";
+import { useActionState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 
 const initialState = {
@@ -41,7 +41,7 @@ const stats = [
 ]
 
 export function ImpactSummary() {
-  const [state, formAction] = useFormState(getImpactSummary, initialState);
+  const [state, formAction] = useActionState(getImpactSummary, initialState);
   const { toast } = useToast();
 
   useEffect(() => {
