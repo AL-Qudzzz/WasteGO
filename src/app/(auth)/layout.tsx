@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import React from "react";
+import { BottomNav } from "@/components/layout/bottom-nav";
 
 const navItems = {
   user: [
@@ -114,9 +115,12 @@ export default function DashboardLayout({
           <SidebarTrigger />
           <UserMenu name={name} email={email} />
         </header>
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 bg-background">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 bg-background pb-24">
             {children}
         </main>
+        <div className="md:hidden">
+            <BottomNav />
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );
@@ -130,7 +134,7 @@ function UserMenu({name, email}: {name: string; email: string}) {
                 <Button variant="ghost" className="relative h-8 flex items-center justify-between w-full sm:w-[200px] px-2">
                    <div className="flex items-center gap-2">
                      <Avatar className="h-8 w-8">
-                        <AvatarImage src="https://placehold.co/40x40.png" alt="User avatar" />
+                        <AvatarImage src="https://placehold.co/40x40.png" alt="User avatar" data-ai-hint="user avatar" />
                         <AvatarFallback>U</AvatarFallback>
                     </Avatar>
                     <div className="text-left hidden sm:block">
