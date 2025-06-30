@@ -1,6 +1,7 @@
 import { LoginForm } from '@/components/auth/login-form';
 import { Recycle } from 'lucide-react';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 export default function LoginPage() {
   return (
