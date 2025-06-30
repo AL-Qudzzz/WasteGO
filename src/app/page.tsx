@@ -1,8 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Recycle, Truck, Award, CalendarDays, ArrowRight, Facebook, Twitter, Instagram } from 'lucide-react';
+import { Recycle, Truck, Award, CalendarDays, ArrowRight, Facebook, Twitter, Instagram, Menu } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 export default function Home() {
   const howItWorks = [
@@ -44,9 +45,37 @@ export default function Home() {
             <Link href="#about" className="text-sm font-medium text-muted-foreground hover:text-primary">About Us</Link>
             <Link href="#contact" className="text-sm font-medium text-muted-foreground hover:text-primary">Contact</Link>
           </nav>
-          <Button asChild>
-            <Link href="/login">Login</Link>
-          </Button>
+          <div className="hidden md:block">
+            <Button asChild>
+              <Link href="/login">Login</Link>
+            </Button>
+          </div>
+          <div className="md:hidden">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <Menu className="h-6 w-6" />
+                  <span className="sr-only">Open menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right">
+                <div className="flex flex-col gap-6 p-6">
+                  <Link href="/" className="flex items-center gap-2 mb-4">
+                    <Recycle className="w-8 h-8 text-primary" />
+                    <h1 className="text-2xl font-bold text-primary">WasteGo</h1>
+                  </Link>
+                  <nav className="flex flex-col gap-4">
+                    <Link href="#how-it-works" className="text-lg font-medium text-muted-foreground hover:text-primary">How it Works</Link>
+                    <Link href="#about" className="text-lg font-medium text-muted-foreground hover:text-primary">About Us</Link>
+                    <Link href="#contact" className="text-lg font-medium text-muted-foreground hover:text-primary">Contact</Link>
+                  </nav>
+                  <Button asChild className="w-full mt-4">
+                    <Link href="/login">Login</Link>
+                  </Button>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </header>
 
