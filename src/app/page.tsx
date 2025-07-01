@@ -90,7 +90,7 @@ export default function Home() {
     { icon: <Trash2 className="w-8 h-8 text-primary" />, label: 'Food Waste', href: dashboardUrl },
     { icon: <HeartPulse className="w-8 h-8 text-primary" />, label: 'Medic Waste', href: dashboardUrl },
     { icon: <Recycle className="w-8 h-8 text-primary" />, label: 'Recycle', href: dashboardUrl },
-    { icon: <Smartphone className="w-8 h-8 text-primary" />, label: 'Electronic Waste', href: dashboardUrl },
+    { icon: <Smartphone className="w-8 h-8 text-primary" />, label: 'E-Waste', href: dashboardUrl },
   ];
 
   const menuItems = [
