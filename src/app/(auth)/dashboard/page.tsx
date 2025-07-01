@@ -12,10 +12,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { SchedulePickupForm } from "@/components/dashboard/user/schedule-pickup-form";
-import { PickupHistory } from "@/components/dashboard/user/pickup-history";
-import { ImpactSummary } from "@/components/dashboard/user/impact-summary";
 import { User, Mail, Phone, MapPin, KeyRound, LogOut } from "lucide-react";
 import Link from "next/link";
 import { Skeleton } from '@/components/ui/skeleton';
@@ -47,15 +43,10 @@ function DashboardContent() {
     return () => unsubscribe();
   }, []);
   
-  const searchParams = useSearchParams();
-  const tab = searchParams.get('tab');
-  const defaultTab = (tab === 'history' || tab === 'impact') ? tab : 'schedule';
-
   if (loading) {
     return (
         <div className="space-y-6">
             <Skeleton className="h-64 w-full" />
-            <Skeleton className="h-96 w-full" />
             <Skeleton className="h-48 w-full" />
         </div>
     )
@@ -114,31 +105,6 @@ function DashboardContent() {
 
       <Card>
         <CardHeader>
-            <CardTitle>Dasbor Aktivitas</CardTitle>
-            <CardDescription>Kelola penjemputan sampah dan lihat dampak lingkungan Anda.</CardDescription>
-        </CardHeader>
-        <CardContent>
-             <Tabs defaultValue={defaultTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="schedule">Jadwalkan Penjemputan</TabsTrigger>
-                <TabsTrigger value="history">Riwayat Penjemputan</TabsTrigger>
-                <TabsTrigger value="impact">Ringkasan Dampak</TabsTrigger>
-              </TabsList>
-              <TabsContent value="schedule" className="mt-6">
-                  <SchedulePickupForm />
-              </TabsContent>
-              <TabsContent value="history" className="mt-6">
-                  <PickupHistory />
-              </TabsContent>
-              <TabsContent value="impact" className="mt-6">
-                  <ImpactSummary />
-              </TabsContent>
-            </Tabs>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
           <CardTitle>Pengaturan Akun</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -162,7 +128,6 @@ export default function UserDashboardPage() {
   return (
     <Suspense fallback={<div className="space-y-6">
         <Skeleton className="h-64 w-full" />
-        <Skeleton className="h-96 w-full" />
         <Skeleton className="h-48 w-full" />
     </div>}>
       <DashboardContent />
