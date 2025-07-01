@@ -91,7 +91,7 @@ export default function MedicWastePage() {
                 >
                     <CarouselContent>
                         {wasteTypes.map((waste, index) => (
-                            <CarouselItem key={index} className="md:basis-1/2">
+                            <CarouselItem key={index} className="basis-4/5 md:basis-1/2">
                                 <Card className="overflow-hidden shadow-md h-full flex flex-col">
                                     <CardHeader className="p-0 relative h-32">
                                         <Image src={waste.imageUrl} alt={waste.title} layout="fill" objectFit="cover" data-ai-hint={waste.imageHint} />
