@@ -132,12 +132,12 @@ export default function Home() {
 
             <div className="grid grid-cols-2 gap-4 mb-6">
                  <Button asChild variant="secondary" className="h-12 text-base font-semibold shadow-md rounded-lg">
-                    <Link href={dashboardUrl}>
+                    <Link href="/dashboard/points">
                         <Award className="mr-2" /> Poin User
                     </Link>
                 </Button>
                 <Button asChild variant="secondary" className="h-12 text-base font-semibold shadow-md rounded-lg">
-                    <Link href={dashboardUrl}>
+                    <Link href="/dashboard/points">
                         <History className="mr-2" /> View History
                     </Link>
                 </Button>
