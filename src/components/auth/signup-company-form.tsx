@@ -49,7 +49,7 @@ export function SignupCompanyForm() {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      await setDoc(doc(db, "users", user.uid), {
+      await setDoc(doc(db, "companies", user.uid), {
         uid: user.uid,
         username,
         email,
