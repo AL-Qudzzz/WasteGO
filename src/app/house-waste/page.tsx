@@ -55,13 +55,15 @@ export default function HouseWastePage() {
             title: "Used Cooking Oil",
             description: "Minyak goreng sisa pemakaian Harus dikemas dengan aman dan tidak dibuang ke sembarang tempat seperti saluran air",
             imageUrl: "https://placehold.co/360x164.png",
-            imageHint: "cooking oil"
+            imageHint: "cooking oil",
+            href: "#"
         },
         {
             title: "Discarded Furniture",
             description: "Barang furnitur yang sudah tidak layak pakai memerlukan pengangkutan khusus dan dapat diarahkan ke proses daur ulang atau pemanfaatan kembali.",
             imageUrl: "https://placehold.co/360x164.png",
-            imageHint: "discarded furniture"
+            imageHint: "discarded furniture",
+            href: "/furniture-disposal"
         }
     ];
 
@@ -103,7 +105,9 @@ export default function HouseWastePage() {
                                         <p className="text-center text-sm text-muted-foreground flex-grow">
                                            {waste.description}
                                         </p>
-                                        <Button className="w-full mt-auto">Salurkan</Button>
+                                        <Button asChild className="w-full mt-auto">
+                                            <Link href={waste.href}>Salurkan</Link>
+                                        </Button>
                                     </CardContent>
                                 </Card>
                             </CarouselItem>
