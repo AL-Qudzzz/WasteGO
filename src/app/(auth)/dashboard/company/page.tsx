@@ -1,3 +1,5 @@
+'use client';
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -5,21 +7,44 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Briefcase, Mail, Phone, MapPin, KeyRound, LogOut, Globe, FileText } from "lucide-react";
-import Link from "next/link";
-
-// Mock company data. In a real app, this would be fetched from Firestore.
-const companyProfile = {
-  companyName: "PT Eco Solutions",
-  email: "contact@ecosolutions.com",
-  phone: "021-555-0123",
-  address: "456 Industrial Park, Metropolis",
-  website: "https://www.ecosolutions.com",
-  nib: "1234567890123",
-  avatarUrl: "https://placehold.co/100x100.png",
-  avatarFallback: "ES"
-};
+import { useAuth } from "@/context/auth-context";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function CompanyProfilePage() {
+  const { userData: companyProfile, loading, logout } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <Card>
+          <CardHeader>
+            <Skeleton className="h-6 w-1/2" />
+            <Skeleton className="h-4 w-3/4" />
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="flex flex-col items-center space-y-4">
+              <Skeleton className="h-24 w-24 rounded-full" />
+              <Skeleton className="h-10 w-24" />
+            </div>
+            <Separator />
+            <div className="space-y-4">
+              <Skeleton className="h-12 w-full" />
+              <Skeleton className="h-12 w-full" />
+              <Skeleton className="h-12 w-full" />
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Skeleton className="h-12 w-full" />
+          </CardFooter>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!companyProfile) {
+    return <div>Could not load company profile.</div>;
+  }
+
   return (
     <div className="space-y-6">
       <Card>
@@ -30,8 +55,8 @@ export default function CompanyProfilePage() {
         <CardContent className="space-y-6">
           <div className="flex flex-col items-center space-y-4">
             <Avatar className="h-24 w-24">
-              <AvatarImage src={companyProfile.avatarUrl} alt={companyProfile.companyName} data-ai-hint="company logo" />
-              <AvatarFallback>{companyProfile.avatarFallback}</AvatarFallback>
+              <AvatarImage src={"https://placehold.co/100x100.png"} alt={companyProfile.companyName} data-ai-hint="company logo" />
+              <AvatarFallback>{(companyProfile.companyName?.substring(0,2) || 'CP').toUpperCase()}</AvatarFallback>
             </Avatar>
             <Button variant="outline">Ganti Logo</Button>
           </div>
@@ -77,11 +102,9 @@ export default function CompanyProfilePage() {
              <KeyRound className="mr-2 h-4 w-4"/>
              <span>Ubah Password</span>
            </Button>
-           <Button variant="destructive" asChild className="w-full justify-start">
-            <Link href="/login">
-                <LogOut className="mr-2 h-4 w-4"/>
-                <span>Keluar</span>
-            </Link>
+           <Button variant="destructive" onClick={logout} className="w-full justify-start">
+            <LogOut className="mr-2 h-4 w-4"/>
+            <span>Keluar</span>
            </Button>
         </CardContent>
       </Card>

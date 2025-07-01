@@ -18,11 +18,9 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { BottomNav } from '@/components/layout/bottom-nav';
-import React, { useEffect, useState } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
-import { auth, db } from '@/lib/firebase';
+import React from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useAuth } from '@/context/auth-context';
 
 type UserRole = 'user' | 'company' | 'admin' | 'courier' | null;
 
@@ -38,54 +36,26 @@ const WasteGoLogo = () => (
 
 
 export default function Home() {
-  const [dashboardUrl, setDashboardUrl] = useState('/login');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const { user, userData, loading } = useAuth();
+  const isLoggedIn = !!user;
   
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setIsLoggedIn(!!currentUser);
-      if (currentUser) {
-        let role: UserRole = null;
-        let finalUrl = '/login';
-
-        const companyDocRef = doc(db, "companies", currentUser.uid);
-        const companyDoc = await getDoc(companyDocRef);
-        if (companyDoc.exists()) {
-          role = 'company';
-        } else {
-            const userDocRef = doc(db, "users", currentUser.uid);
-            const userDoc = await getDoc(userDocRef);
-            if (userDoc.exists()) {
-                const userData = userDoc.data();
-                role = userData.role || 'user'; 
-            } else {
-                role = 'user'; // Fallback for safety
-            }
-        }
-        
-        switch (role) {
-            case 'company':
-                finalUrl = '/dashboard/company';
-                break;
-            case 'admin':
-                finalUrl = '/dashboard/admin';
-                break;
-            case 'courier':
-                finalUrl = '/dashboard/courier';
-                break;
-            default:
-                finalUrl = '/dashboard';
-                break;
-        }
-        setDashboardUrl(finalUrl);
-      } else {
-        setDashboardUrl('/login');
-      }
-      setLoading(false);
-    });
-    return () => unsubscribe();
-  }, []);
+  let dashboardUrl = '/login';
+  if (isLoggedIn && userData) {
+    switch (userData.role) {
+        case 'company':
+            dashboardUrl = '/dashboard/company';
+            break;
+        case 'admin':
+            dashboardUrl = '/dashboard/admin';
+            break;
+        case 'courier':
+            dashboardUrl = '/dashboard/courier';
+            break;
+        default:
+            dashboardUrl = '/dashboard';
+            break;
+    }
+  }
 
   const categories = [
     { icon: <HomeIcon className="w-8 h-8 text-primary" />, label: 'House Waste', href: isLoggedIn ? '/house-waste' : '/login' },

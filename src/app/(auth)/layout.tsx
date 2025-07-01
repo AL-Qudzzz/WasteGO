@@ -16,13 +16,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { BottomNav } from "@/components/layout/bottom-nav";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-import { auth, db } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useAuth } from "@/context/auth-context";
 
 
 export default function DashboardLayout({
@@ -30,42 +28,15 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [userData, setUserData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const { userData, loading, logout } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        // Check company collection
-        const companyDocRef = doc(db, 'companies', user.uid);
-        const companyDocSnap = await getDoc(companyDocRef);
-        if (companyDocSnap.exists()) {
-          setUserData(companyDocSnap.data());
-          setLoading(false);
-          return;
-        }
+    if (!loading && !userData) {
+      router.replace('/login');
+    }
+  }, [loading, userData, router]);
 
-        // Check user collection
-        const userDocRef = doc(db, 'users', user.uid);
-        const userDocSnap = await getDoc(userDocRef);
-        if (userDocSnap.exists()) {
-          setUserData(userDocSnap.data());
-        } else {
-          // User authenticated but no data in Firestore
-          setUserData(null);
-        }
-        setLoading(false);
-      } else {
-        // User is signed out, redirect to login
-        router.replace('/login');
-      }
-    });
-
-    return () => unsubscribe();
-  }, [router]);
-
-  // Use fallback data during loading or if userData is null
   const name = userData?.companyName || userData?.fullName || "User";
   const email = userData?.email || "...";
   const avatarFallback = (name.split(' ').map(n => n[0]).join('') || 'U').substring(0,2).toUpperCase();
@@ -103,7 +74,7 @@ export default function DashboardLayout({
             WasteGo
           </h1>
         </div>
-        <UserMenu name={name} email={email} avatarFallback={avatarFallback} />
+        <UserMenu name={name} email={email} avatarFallback={avatarFallback} handleLogout={logout} />
       </header>
       <main className="flex-1 p-4 sm:p-6 lg:p-8 bg-background pb-24">
           {children}
@@ -116,17 +87,7 @@ export default function DashboardLayout({
 }
 
 
-function UserMenu({name, email, avatarFallback}: {name: string; email: string, avatarFallback: string}) {
-
-    const handleLogout = async () => {
-      try {
-        await signOut(auth);
-        // The onAuthStateChanged listener in the layout will handle the redirect.
-      } catch (error) {
-        console.error("Error signing out:", error);
-      }
-    };
-    
+function UserMenu({name, email, avatarFallback, handleLogout}: {name: string; email: string, avatarFallback: string, handleLogout: () => void}) {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
