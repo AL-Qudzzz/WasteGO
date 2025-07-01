@@ -6,6 +6,13 @@ import { Leaf, ArrowLeft, Menu } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BottomNav } from '@/components/layout/bottom-nav';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 const WasteGoLogo = () => (
     <div className="flex items-center gap-1">
@@ -43,6 +50,21 @@ export default function MedicWastePage() {
         { number: '6', title: 'Penyaluran', description: 'Limbah medis disalurkan ke tujuan yang tepat' }
     ];
 
+    const wasteTypes = [
+        {
+            title: "Regulated Medical Waste",
+            description: "Limbah medis yang berisiko tinggi seperti infeksius, tajam, atau beracun. Harus ditangani oleh pihak berizin dan dijemput oleh jasa pengelola limbah B3 resmi.",
+            imageUrl: "https://i.imgur.com/gKEM218.png",
+            imageHint: "medical waste"
+        },
+        {
+            title: "Non-Hazardous Medical Waste",
+            description: "Limbah medis ringan yang tidak berbahaya dan tidak terkontaminasi. Bisa dikumpulkan melalui sistem antar-jemput biasa dengan perlakuan terpisah.",
+            imageUrl: "https://i.imgur.com/9C8YfEa.png",
+            imageHint: "medical supplies"
+        }
+    ];
+
     return (
         <div className="flex flex-col min-h-screen bg-muted/20 text-foreground font-sans">
             <header className="p-4 flex justify-between items-center bg-background border-b sticky top-0 z-10">
@@ -60,37 +82,37 @@ export default function MedicWastePage() {
                     <h1 className="text-2xl font-bold text-foreground">Medic Waste</h1>
                     <div className="absolute bottom-0 left-0 w-24 h-1 bg-primary rounded-full"></div>
                 </div>
+                
+                <Carousel
+                    opts={{
+                        align: "start",
+                    }}
+                    className="w-full md:max-w-xl lg:max-w-2xl mx-auto mb-6"
+                >
+                    <CarouselContent>
+                        {wasteTypes.map((waste, index) => (
+                            <CarouselItem key={index} className="md:basis-1/2">
+                                <Card className="overflow-hidden shadow-md h-full flex flex-col">
+                                    <CardHeader className="p-0 relative h-32">
+                                        <Image src={waste.imageUrl} alt={waste.title} layout="fill" objectFit="cover" data-ai-hint={waste.imageHint} />
+                                        <div className="absolute inset-0 bg-black/50 flex items-center justify-center p-2">
+                                            <CardTitle className="text-white text-center text-lg leading-tight">{waste.title}</CardTitle>
+                                        </div>
+                                    </CardHeader>
+                                    <CardContent className="p-4 space-y-3 flex-grow flex flex-col">
+                                        <p className="text-center text-sm text-muted-foreground flex-grow">
+                                           {waste.description}
+                                        </p>
+                                        <Button className="w-full mt-auto">Salurkan</Button>
+                                    </CardContent>
+                                </Card>
+                            </CarouselItem>
+                        ))}
+                    </CarouselContent>
+                    <CarouselPrevious className="hidden md:flex" />
+                    <CarouselNext className="hidden md:flex" />
+                </Carousel>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <Card className="overflow-hidden shadow-md">
-                        <CardHeader className="p-0 relative h-32">
-                            <Image src="https://i.imgur.com/gKEM218.png" alt="Regulated Medical Waste" layout="fill" objectFit="cover" data-ai-hint="medical waste" />
-                            <div className="absolute inset-0 bg-black/50 flex items-center justify-center p-2">
-                                <CardTitle className="text-white text-center text-lg leading-tight">Regulated Medical Waste</CardTitle>
-                            </div>
-                        </CardHeader>
-                        <CardContent className="p-4 space-y-3">
-                            <p className="text-center text-sm text-muted-foreground h-24">
-                                Limbah medis yang berisiko tinggi seperti infeksius, tajam, atau beracun. Harus ditangani oleh pihak berizin dan dijemput oleh jasa pengelola limbah B3 resmi.
-                            </p>
-                            <Button className="w-full">Salurkan</Button>
-                        </CardContent>
-                    </Card>
-                    <Card className="overflow-hidden shadow-md">
-                        <CardHeader className="p-0 relative h-32">
-                            <Image src="https://i.imgur.com/9C8YfEa.png" alt="Non-Hazardous Medical Waste" layout="fill" objectFit="cover" data-ai-hint="medical supplies"/>
-                            <div className="absolute inset-0 bg-black/50 flex items-center justify-center p-2">
-                                <CardTitle className="text-white text-center text-lg leading-tight">Non-Hazardous Medical Waste</CardTitle>
-                            </div>
-                        </CardHeader>
-                        <CardContent className="p-4 space-y-3">
-                            <p className="text-center text-sm text-muted-foreground h-24">
-                                Limbah medis ringan yang tidak berbahaya dan tidak terkontaminasi. Bisa dikumpulkan melalui sistem antar-jemput biasa dengan perlakuan terpisah.
-                            </p>
-                            <Button className="w-full">Salurkan</Button>
-                        </CardContent>
-                    </Card>
-                </div>
 
                 <Card className="shadow-md">
                     <CardHeader>
