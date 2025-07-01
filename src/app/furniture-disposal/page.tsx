@@ -107,7 +107,7 @@ export default function FurnitureDisposalPage() {
                 </Card>
             </main>
             <Dialog open={isSuccessModalOpen} onOpenChange={setIsSuccessModalOpen}>
-                <DialogContent className="sm:max-w-md p-8">
+                <DialogContent className="sm:max-w-md p-8 rounded-[5px]">
                     <div className="flex flex-col items-center text-center space-y-4">
                         <div className="bg-primary text-primary-foreground rounded-full p-4">
                             <CheckCircle className="h-12 w-12" />
