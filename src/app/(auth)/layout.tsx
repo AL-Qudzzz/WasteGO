@@ -21,7 +21,6 @@ import { BottomNav } from "@/components/layout/bottom-nav";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
-import { useRouter } from "next/navigation";
 
 
 export default function DashboardLayout({
@@ -90,12 +89,11 @@ export default function DashboardLayout({
 
 
 function UserMenu({name, email, avatarFallback}: {name: string; email: string, avatarFallback: string}) {
-    const router = useRouter();
 
     const handleLogout = async () => {
       try {
         await signOut(auth);
-        router.push('/login');
+        window.location.assign('/login');
       } catch (error) {
         console.error("Error signing out:", error);
       }
