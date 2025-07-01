@@ -18,9 +18,10 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import React, { useEffect, useState } from "react";
 import { BottomNav } from "@/components/layout/bottom-nav";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
+import { useRouter } from "next/navigation";
 
 
 export default function DashboardLayout({
@@ -89,6 +90,17 @@ export default function DashboardLayout({
 
 
 function UserMenu({name, email, avatarFallback}: {name: string; email: string, avatarFallback: string}) {
+    const router = useRouter();
+
+    const handleLogout = async () => {
+      try {
+        await signOut(auth);
+        router.push('/login');
+      } catch (error) {
+        console.error("Error signing out:", error);
+      }
+    };
+    
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -113,8 +125,8 @@ function UserMenu({name, email, avatarFallback}: {name: string; email: string, a
                     </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                    <Link href="/login"><LogOut className="mr-2 h-4 w-4" /><span>Log out</span></Link>
+                <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
+                    <LogOut className="mr-2 h-4 w-4" /><span>Log out</span>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
