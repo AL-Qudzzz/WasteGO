@@ -14,24 +14,24 @@ body {
     --card-foreground: 100 30% 24%;
     --popover: 0 0% 100%;
     --popover-foreground: 100 30% 24%;
-    --primary: 80 18% 43%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 80 36% 49%;
+    --primary-foreground: 100 30% 14%;
     --secondary: 0 0% 100%;
     --secondary-foreground: 100 30% 24%;
     --muted: 0 0% 95%;
     --muted-foreground: 0 0% 40%;
-    --accent: 80 18% 53%;
+    --accent: 80 36% 59%;
     --accent-foreground: 100 30% 14%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 87%;
     --input: 0 0% 87%;
-    --ring: 80 18% 43%;
-    --chart-1: 80 18% 43%;
-    --chart-2: 80 18% 53%;
-    --chart-3: 80 18% 33%;
-    --chart-4: 80 18% 63%;
-    --chart-5: 80 18% 23%;
+    --ring: 80 36% 49%;
+    --chart-1: 80 36% 49%;
+    --chart-2: 80 36% 59%;
+    --chart-3: 80 36% 39%;
+    --chart-4: 80 36% 69%;
+    --chart-5: 80 36% 29%;
     --radius: 1rem;
     --sidebar-background: 136 20% 88%;
     --sidebar-foreground: 136 30% 20%;
@@ -43,7 +43,7 @@ body {
     --sidebar-ring: 136 30% 30%;
     --nav-background: 140 25% 16%;
     --nav-foreground: 0 0% 80%;
-    --nav-active: 80 18% 43%;
+    --nav-active: 80 36% 49%;
   }
   .dark {
     --background: 136 5% 10%;
@@ -52,24 +52,24 @@ body {
     --card-foreground: 43 20% 95%;
     --popover: 136 5% 10%;
     --popover-foreground: 43 20% 95%;
-    --primary: 80 18% 65%;
+    --primary: 80 36% 65%;
     --primary-foreground: 80 18% 10%;
     --secondary: 120 10% 12%;
     --secondary-foreground: 93 35% 78%;
     --muted: 136 10% 20%;
     --muted-foreground: 136 10% 60%;
-    --accent: 80 18% 65%;
+    --accent: 80 36% 65%;
     --accent-foreground: 80 18% 10%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     --border: 136 10% 25%;
     --input: 136 10% 25%;
-    --ring: 80 18% 65%;
-    --chart-1: 80 18% 65%;
-    --chart-2: 80 18% 75%;
-    --chart-3: 80 18% 55%;
-    --chart-4: 80 18% 85%;
-    --chart-5: 80 18% 45%;
+    --ring: 80 36% 65%;
+    --chart-1: 80 36% 65%;
+    --chart-2: 80 36% 75%;
+    --chart-3: 80 36% 55%;
+    --chart-4: 80 36% 85%;
+    --chart-5: 80 36% 45%;
     --sidebar-background: 136 5% 12%;
     --sidebar-foreground: 43 20% 90%;
     --sidebar-primary: 136 30% 70%;
@@ -80,7 +80,7 @@ body {
     --sidebar-ring: 136 30% 70%;
     --nav-background: 140 25% 16%;
     --nav-foreground: 0 0% 80%;
-    --nav-active: 80 18% 43%;
+    --nav-active: 80 36% 65%;
   }
 }
 
