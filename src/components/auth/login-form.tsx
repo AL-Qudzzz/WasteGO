@@ -139,7 +139,7 @@ export function LoginForm() {
                         </Link>
                     </Button>
                     <Button variant="secondary" asChild>
-                        <Link href="#">
+                        <Link href="/signup-company">
                             <Building className="mr-2 h-4 w-4" /> Daftar sebagai Perusahaan
                         </Link>
                     </Button>
