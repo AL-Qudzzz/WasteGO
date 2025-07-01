@@ -6,28 +6,71 @@ import { usePathname } from 'next/navigation';
 import { Home, MapPin, User } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { onAuthStateChanged, type User as FirebaseUser } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { auth, db } from '@/lib/firebase';
 import { Skeleton } from '@/components/ui/skeleton';
+import { doc, getDoc } from 'firebase/firestore';
+
+type UserRole = 'user' | 'company' | 'admin' | 'courier' | null;
+
 
 export function BottomNav() {
   const pathname = usePathname();
   const [user, setUser] = useState<FirebaseUser | null>(null);
+  const [role, setRole] = useState<UserRole>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+      if (currentUser) {
+        // Check for role in firestore
+        const companyDocRef = doc(db, "companies", currentUser.uid);
+        const companyDoc = await getDoc(companyDocRef);
+        if (companyDoc.exists()) {
+          setRole('company');
+        } else {
+            const userDocRef = doc(db, "users", currentUser.uid);
+            const userDoc = await getDoc(userDocRef);
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                // Roles like 'admin', 'courier' are also in the users collection
+                setRole(userData.role || 'user'); 
+            } else {
+                setRole('user'); // Fallback for safety
+            }
+        }
+      } else {
+        setRole(null);
+      }
       setLoading(false);
     });
     return () => unsubscribe();
   }, []);
 
-  const profileHref = user ? '/dashboard' : '/login';
+
+  let profileHref = '/login';
+  if (user) {
+    switch (role) {
+      case 'company':
+        profileHref = '/dashboard/company';
+        break;
+      case 'admin':
+        profileHref = '/dashboard/admin';
+        break;
+      case 'courier':
+        profileHref = '/dashboard/courier';
+        break;
+      default:
+        profileHref = '/dashboard';
+        break;
+    }
+  }
+
 
   const bottomNavItems = [
     { icon: <Home className="w-6 h-6" />, label: 'Home', href: '/', active: pathname === '/' },
     { icon: <MapPin className="w-6 h-6" />, label: 'Location', href: '#', active: pathname === '/location' },
-    { icon: <User className="w-6 h-6" />, label: 'Profile', href: profileHref, active: pathname.startsWith('/dashboard') || pathname === '/login' || pathname === '/signup' },
+    { icon: <User className="w-6 h-6" />, label: 'Profile', href: profileHref, active: pathname.startsWith('/dashboard') || pathname === '/login' || pathname.startsWith('/signup') },
   ];
 
   if (loading) {
