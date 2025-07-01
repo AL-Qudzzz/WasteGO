@@ -93,7 +93,7 @@ export default function Home() {
   ];
 
   const menuItems = [
-    { label: 'Scheduling', href: dashboardUrl },
+    { label: 'Status', href: dashboardUrl },
     { label: 'Achievment', href: '/dashboard/points' },
     { label: 'About Us', href: '#' },
   ];
