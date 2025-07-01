@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -15,8 +16,8 @@ export function SchedulePickupForm() {
     event.preventDefault();
     // Logic to handle form submission would go here
     toast({
-      title: "Pickup Scheduled!",
-      description: "Your waste pickup has been successfully scheduled. We will notify you with updates.",
+      title: "Penjemputan Terjadwal!",
+      description: "Penjemputan sampah Anda telah berhasil dijadwalkan. Kami akan memberitahu Anda dengan pembaruan.",
     });
     (event.target as HTMLFormElement).reset();
   };
@@ -26,38 +27,38 @@ export function SchedulePickupForm() {
       <div className="space-y-2">
         <Label htmlFor="address" className="flex items-center gap-2">
           <MapPin className="h-4 w-4" />
-          Pickup Address
+          Alamat Penjemputan
         </Label>
         <Textarea
           id="address"
-          placeholder="Enter your full address"
+          placeholder="Masukkan alamat lengkap Anda"
           required
           defaultValue="123 Green St, Eco City, 12345"
         />
       </div>
 
       <div className="space-y-2">
-        <Label>Type of Waste</Label>
+        <Label>Jenis Limbah</Label>
         <RadioGroup defaultValue="plastic" className="flex flex-wrap gap-4 pt-2">
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="plastic" id="plastic" />
-            <Label htmlFor="plastic">Plastic</Label>
+            <Label htmlFor="plastic">Plastik</Label>
           </div>
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="paper" id="paper" />
-            <Label htmlFor="paper">Paper</Label>
+            <Label htmlFor="paper">Kertas</Label>
           </div>
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="metal" id="metal" />
-            <Label htmlFor="metal">Metal</Label>
+            <Label htmlFor="metal">Logam</Label>
           </div>
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="glass" id="glass" />
-            <Label htmlFor="glass">Glass</Label>
+            <Label htmlFor="glass">Kaca</Label>
           </div>
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="other" id="other" />
-            <Label htmlFor="other">Other</Label>
+            <Label htmlFor="other">Lainnya</Label>
           </div>
         </RadioGroup>
       </div>
@@ -66,12 +67,12 @@ export function SchedulePickupForm() {
         <div className="space-y-2">
           <Label htmlFor="weight" className="flex items-center gap-2">
             <Scale className="h-4 w-4" />
-            Estimated Weight (kg)
+            Perkiraan Berat (kg)
           </Label>
           <Input
             id="weight"
             type="number"
-            placeholder="e.g., 5"
+            placeholder="cth., 5"
             required
             min="1"
             defaultValue="5"
@@ -80,14 +81,14 @@ export function SchedulePickupForm() {
         <div className="space-y-2">
           <Label htmlFor="photo" className="flex items-center gap-2">
             <Camera className="h-4 w-4" />
-            Upload Photo
+            Foto Limbah
           </Label>
           <Input id="photo" type="file" />
         </div>
       </div>
 
       <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
-        Schedule Pickup
+        Jadwalkan Penjemputan
       </Button>
     </form>
   );

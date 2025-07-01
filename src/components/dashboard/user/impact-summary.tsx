@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useFormStatus } from "react-dom";
@@ -22,12 +23,12 @@ function SubmitButton() {
       {pending ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          Generating...
+          Menghasilkan...
         </>
       ) : (
         <>
           <Leaf className="mr-2 h-4 w-4" />
-          Generate My Impact
+          Hasilkan Ringkasan Dampak Saya
         </>
       )}
     </Button>
@@ -35,9 +36,9 @@ function SubmitButton() {
 }
 
 const stats = [
-    { name: "Trees Saved", value: "12", icon: Trees, color: "text-green-600" },
-    { name: "Water Saved", value: "3,000L", icon: Droplets, color: "text-blue-500" },
-    { name: "Energy Saved", value: "600 kWh", icon: Zap, color: "text-yellow-500" },
+    { name: "Pohon Terselamatkan", value: "12", icon: Trees, color: "text-green-600" },
+    { name: "Air Terhemat", value: "3,000L", icon: Droplets, color: "text-blue-500" },
+    { name: "Energi Terhemat", value: "600 kWh", icon: Zap, color: "text-yellow-500" },
 ]
 
 export function ImpactSummary() {
@@ -67,7 +68,7 @@ export function ImpactSummary() {
         </div>
       <form action={formAction} className="space-y-4">
         <div>
-          <Label htmlFor="totalWeight">Total Recycled Weight (kg)</Label>
+          <Label htmlFor="totalWeight">Total Berat Daur Ulang (kg)</Label>
           <Input
             id="totalWeight"
             name="totalWeight"
@@ -83,7 +84,7 @@ export function ImpactSummary() {
       {state.summary && (
         <Alert className="bg-primary/10 border-primary/20">
           <Leaf className="h-4 w-4 text-primary" />
-          <AlertTitle className="text-primary font-bold">Your Impact Summary</AlertTitle>
+          <AlertTitle className="text-primary font-bold">Ringkasan Dampak Anda</AlertTitle>
           <AlertDescription className="text-primary/80">
             {state.summary}
           </AlertDescription>
