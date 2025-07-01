@@ -84,7 +84,7 @@ export default function Home() {
   }, []);
 
   const categories = [
-    { icon: <HomeIcon className="w-8 h-8 text-primary" />, label: 'House Waste', href: dashboardUrl },
+    { icon: <HomeIcon className="w-8 h-8 text-primary" />, label: 'House Waste', href: '/house-waste' },
     { icon: <Factory className="w-8 h-8 text-primary" />, label: 'Factory Waste', href: dashboardUrl },
     { icon: <Trash2 className="w-8 h-8 text-primary" />, label: 'Food Waste', href: dashboardUrl },
     { icon: <HeartPulse className="w-8 h-8 text-primary" />, label: 'Medic Waste', href: '/medic-waste' },
@@ -94,7 +94,7 @@ export default function Home() {
 
   const menuItems = [
     { label: 'Scheduling', href: dashboardUrl },
-    { label: 'Achievment', href: dashboardUrl },
+    { label: 'Achievment', href: '/dashboard/points' },
     { label: 'About Us', href: '#' },
   ];
 
