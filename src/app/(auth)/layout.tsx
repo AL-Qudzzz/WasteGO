@@ -21,6 +21,8 @@ import { BottomNav } from "@/components/layout/bottom-nav";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
+import { useRouter } from "next/navigation";
+import { Skeleton } from "@/components/ui/skeleton";
 
 
 export default function DashboardLayout({
@@ -30,6 +32,7 @@ export default function DashboardLayout({
 }) {
   const [userData, setUserData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -52,20 +55,43 @@ export default function DashboardLayout({
           // User authenticated but no data in Firestore
           setUserData(null);
         }
+        setLoading(false);
       } else {
-        // User is signed out
-        setUserData(null);
+        // User is signed out, redirect to login
+        router.replace('/login');
       }
-      setLoading(false);
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [router]);
 
   // Use fallback data during loading or if userData is null
   const name = userData?.companyName || userData?.fullName || "User";
   const email = userData?.email || "...";
   const avatarFallback = (name.split(' ').map(n => n[0]).join('') || 'U').substring(0,2).toUpperCase();
+
+  if (loading || !userData) {
+    return (
+      <div className="flex min-h-screen w-full flex-col">
+        <header className="flex justify-between items-center p-4 border-b bg-background sticky top-0 z-10">
+          <div className="flex items-center gap-2">
+            <Recycle className="w-8 h-8 text-primary" />
+            <h1 className="text-xl font-bold text-primary hidden sm:block">
+              WasteGo
+            </h1>
+          </div>
+          <Skeleton className="h-10 w-[200px] rounded-md" />
+        </header>
+        <main className="flex-1 p-4 sm:p-6 lg:p-8">
+          <div className="space-y-4">
+            <Skeleton className="h-8 w-1/2" />
+            <Skeleton className="h-4 w-1/4" />
+            <Skeleton className="h-96 w-full" />
+          </div>
+        </main>
+      </div>
+    )
+  }
 
 
   return (
@@ -77,11 +103,7 @@ export default function DashboardLayout({
             WasteGo
           </h1>
         </div>
-        {loading ? (
-          <div className="h-8 w-8 sm:w-[200px] bg-muted rounded-full animate-pulse"></div>
-        ) : (
-          <UserMenu name={name} email={email} avatarFallback={avatarFallback} />
-        )}
+        <UserMenu name={name} email={email} avatarFallback={avatarFallback} />
       </header>
       <main className="flex-1 p-4 sm:p-6 lg:p-8 bg-background pb-24">
           {children}
@@ -99,7 +121,7 @@ function UserMenu({name, email, avatarFallback}: {name: string; email: string, a
     const handleLogout = async () => {
       try {
         await signOut(auth);
-        window.location.assign('/login');
+        // The onAuthStateChanged listener in the layout will handle the redirect.
       } catch (error) {
         console.error("Error signing out:", error);
       }
