@@ -1,4 +1,3 @@
-
 'use client';
 
 import {
@@ -29,7 +28,7 @@ type UserRole = 'user' | 'company' | 'admin' | 'courier' | null;
 const WasteGoLogo = () => (
     <div className="flex items-center gap-1">
         <span className="text-3xl font-bold text-foreground">Waste</span>
-        <span className="text-3xl font-bold text-foreground flex items-center">
+        <span className="text-3xl font-bold text-primary flex items-center">
             GO
             <Leaf className="w-5 h-5 text-primary -ml-2 -mt-3 transform -scale-x-100" strokeWidth={3} />
         </span>
@@ -88,7 +87,7 @@ export default function Home() {
     { icon: <HomeIcon className="w-8 h-8 text-primary" />, label: 'House Waste', href: dashboardUrl },
     { icon: <Factory className="w-8 h-8 text-primary" />, label: 'Factory Waste', href: dashboardUrl },
     { icon: <Trash2 className="w-8 h-8 text-primary" />, label: 'Food Waste', href: dashboardUrl },
-    { icon: <HeartPulse className="w-8 h-8 text-primary" />, label: 'Medic Waste', href: dashboardUrl },
+    { icon: <HeartPulse className="w-8 h-8 text-primary" />, label: 'Medic Waste', href: '/medic-waste' },
     { icon: <Recycle className="w-8 h-8 text-primary" />, label: 'Recycle', href: dashboardUrl },
     { icon: <Smartphone className="w-8 h-8 text-primary" />, label: 'E-Waste', href: dashboardUrl },
   ];
