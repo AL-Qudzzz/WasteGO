@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Leaf, ArrowLeft, Menu, ArrowDown } from 'lucide-react';
+import { Leaf, ArrowLeft, Menu } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BottomNav } from '@/components/layout/bottom-nav';
@@ -13,7 +13,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import React from 'react';
 
 const WasteGoLogo = () => (
     <div className="flex items-center gap-1">
@@ -25,16 +24,19 @@ const WasteGoLogo = () => (
     </div>
 );
 
-const ProcessStep = ({ number, title, description }: { number: string; title: string; description: string; }) => (
-    <div className="flex items-start">
-        <div className="flex-shrink-0 bg-primary text-primary-foreground rounded-full w-10 h-10 flex items-center justify-center text-lg font-bold">
-            {number}
-        </div>
-        <div className="ml-4 pt-1">
-            <h3 className="font-bold text-md text-foreground">{title}</h3>
-            <p className="text-sm text-muted-foreground">{description}</p>
-        </div>
+const ProcessStep = ({ number, title, description, isLast }: { number: string; title: string; description: string; isLast?: boolean }) => (
+  <div className="relative pl-16 pb-12 last:pb-0">
+    <div className="absolute left-5 top-1 flex flex-col items-center h-full">
+      <div className="bg-primary text-primary-foreground rounded-full w-10 h-10 flex items-center justify-center text-lg font-bold flex-shrink-0">
+        {number}
+      </div>
+      {!isLast && <div className="w-px h-full bg-border mt-2" />}
     </div>
+    <div className="pt-1">
+      <h3 className="font-bold text-md text-foreground">{title}</h3>
+      <p className="text-sm text-muted-foreground">{description}</p>
+    </div>
+  </div>
 );
 
 
@@ -116,23 +118,16 @@ export default function HouseWastePage() {
                     <CardHeader>
                         <CardTitle className="text-center text-xl">Alur Proses Penyaluran</CardTitle>
                     </CardHeader>
-                    <CardContent className="pt-6 px-4">
-                        <div className="flex flex-col items-center">
-                            {processSteps.map((step, index) => (
-                                <React.Fragment key={step.number}>
-                                    <div className='w-full'>
-                                        <ProcessStep 
-                                            number={step.number} 
-                                            title={step.title} 
-                                            description={step.description}
-                                        />
-                                    </div>
-                                    {index < processSteps.length - 1 && (
-                                        <ArrowDown className="w-6 h-6 text-muted-foreground my-4" />
-                                    )}
-                                </React.Fragment>
-                            ))}
-                        </div>
+                    <CardContent className="pt-6">
+                        {processSteps.map((step, index) => (
+                            <ProcessStep 
+                                key={step.number}
+                                number={step.number} 
+                                title={step.title} 
+                                description={step.description}
+                                isLast={index === processSteps.length - 1} 
+                            />
+                        ))}
                     </CardContent>
                 </Card>
             </main>
