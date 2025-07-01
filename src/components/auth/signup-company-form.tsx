@@ -7,13 +7,12 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
-import { User, Mail, Eye, EyeOff, Phone, MapPin, Loader2, Briefcase, FileText, Globe, UploadCloud, FileCheck2, X } from 'lucide-react';
+import { User, Mail, Eye, EyeOff, Phone, MapPin, Loader2, Briefcase, FileText, Globe } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, setDoc, updateDoc } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { auth, db, storage } from '@/lib/firebase';
+import { doc, setDoc } from 'firebase/firestore';
+import { auth, db } from '@/lib/firebase';
 
 export function SignupCompanyForm() {
   const router = useRouter();
@@ -27,20 +26,8 @@ export function SignupCompanyForm() {
   const [postalCode, setPostalCode] = useState('');
   const [nib, setNib] = useState('');
   const [website, setWebsite] = useState('');
-  const [companyProfileFile, setCompanyProfileFile] = useState<File | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      if (file.size > 10 * 1024 * 1024) { // 10MB limit
-        toast({ variant: "destructive", title: "File terlalu besar", description: "Silakan unggah file yang lebih kecil dari 10MB." });
-        return;
-      }
-      setCompanyProfileFile(file);
-    }
-  };
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,9 +37,7 @@ export function SignupCompanyForm() {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Initialize Firestore doc creation promise
-      const companyDocRef = doc(db, "companies", user.uid);
-      const setDocPromise = setDoc(companyDocRef, {
+      await setDoc(doc(db, "companies", user.uid), {
         uid: user.uid,
         username,
         email,
@@ -62,23 +47,9 @@ export function SignupCompanyForm() {
         postalCode,
         nib,
         website,
-        companyProfileUrl: '', // Will be updated if there's a file
         role: 'company',
         createdAt: new Date(),
       });
-
-      // Handle file upload and update in parallel
-      const uploadAndUpdatePromise = companyProfileFile ? (async () => {
-          const storageRef = ref(storage, `company_profiles/${user.uid}/${companyProfileFile.name}`);
-          await uploadBytes(storageRef, companyProfileFile);
-          const downloadURL = await getDownloadURL(storageRef);
-          // The initial doc must be created before we can update it.
-          // We don't need to await here because Promise.all will handle it.
-          await updateDoc(companyDocRef, { companyProfileUrl: downloadURL });
-      })() : Promise.resolve();
-
-      // Wait for both promises (document creation and file upload/update) to complete
-      await Promise.all([setDocPromise, uploadAndUpdatePromise]);
 
       toast({
         title: "Pendaftaran Berhasil",
@@ -162,48 +133,6 @@ export function SignupCompanyForm() {
              <FileText className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
              <Input id="nib" type="text" placeholder="Masukkan NIB Anda" required className="pl-10" value={nib} onChange={(e) => setNib(e.target.value)} disabled={isLoading} />
           </div>
-        </div>
-        <div className="space-y-2">
-          <Label>Profile Perusahaan</Label>
-          <p className="text-xs text-muted-foreground">Unggah dokumen pendukung yang berisi profile atau dokumentasi perusahaan untuk melengkapi registrasi</p>
-          {!companyProfileFile ? (
-            <div className="relative flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted">
-                <div className="flex flex-col items-center justify-center pt-5 pb-6 text-center">
-                    <UploadCloud className="w-8 h-8 mb-2 text-muted-foreground" />
-                    <p className="mb-1 text-sm text-muted-foreground"><span className="font-semibold">Klik untuk upload</span> atau drag & drop</p>
-                    <p className="text-xs text-muted-foreground">PDF, DOC, DOCX, JPG, PNG (Max. 10MB)</p>
-                </div>
-                <Input 
-                  id="company-profile" 
-                  type="file" 
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
-                  disabled={isLoading}
-                  onChange={handleFileChange}
-                  accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
-                />
-            </div>
-          ) : (
-            <div className="flex items-center justify-between w-full p-3 border rounded-lg bg-muted/50">
-                <div className="flex items-center gap-3">
-                    <FileCheck2 className="w-6 h-6 text-primary" />
-                    <span className="text-sm font-medium truncate">{companyProfileFile.name}</span>
-                </div>
-                <Button 
-                    type="button" 
-                    variant="ghost" 
-                    size="icon" 
-                    className="w-8 h-8 text-muted-foreground hover:text-destructive"
-                    onClick={() => {
-                        setCompanyProfileFile(null);
-                        const fileInput = document.getElementById('company-profile') as HTMLInputElement;
-                        if(fileInput) fileInput.value = '';
-                    }}
-                    disabled={isLoading}
-                >
-                    <X className="w-4 h-4" />
-                </Button>
-            </div>
-          )}
         </div>
          <div className="space-y-2">
           <Label htmlFor="website">Website Perusahaan</Label>
