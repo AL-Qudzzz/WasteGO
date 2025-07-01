@@ -66,7 +66,7 @@ export default function FurnitureDisposalPage() {
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="photo-upload" className="font-semibold text-foreground">Upload foto furniture tidak layak *</Label>
+                                <Label htmlFor="photo-upload" className="font-semibold text-foreground">Upload foto furniture tidak layak</Label>
                                 <div 
                                     className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-md cursor-pointer hover:border-primary"
                                     onClick={() => document.getElementById('photo-upload-input')?.click()}
