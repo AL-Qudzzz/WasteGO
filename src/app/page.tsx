@@ -22,6 +22,7 @@ import React, { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
+import { Skeleton } from '@/components/ui/skeleton';
 
 type UserRole = 'user' | 'company' | 'admin' | 'courier' | null;
 
@@ -38,9 +39,12 @@ const WasteGoLogo = () => (
 
 export default function Home() {
   const [dashboardUrl, setDashboardUrl] = useState('/login');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
   
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setIsLoggedIn(!!currentUser);
       if (currentUser) {
         let role: UserRole = null;
         let finalUrl = '/login';
@@ -78,24 +82,68 @@ export default function Home() {
       } else {
         setDashboardUrl('/login');
       }
+      setLoading(false);
     });
     return () => unsubscribe();
   }, []);
 
   const categories = [
-    { icon: <HomeIcon className="w-8 h-8 text-primary" />, label: 'House Waste', href: '/house-waste' },
-    { icon: <Factory className="w-8 h-8 text-primary" />, label: 'Factory Waste', href: dashboardUrl },
-    { icon: <Trash2 className="w-8 h-8 text-primary" />, label: 'Food Waste', href: dashboardUrl },
-    { icon: <HeartPulse className="w-8 h-8 text-primary" />, label: 'Medic Waste', href: '/medic-waste' },
-    { icon: <Recycle className="w-8 h-8 text-primary" />, label: 'Recycle', href: dashboardUrl },
-    { icon: <Smartphone className="w-8 h-8 text-primary" />, label: 'E-Waste', href: dashboardUrl },
+    { icon: <HomeIcon className="w-8 h-8 text-primary" />, label: 'House Waste', href: isLoggedIn ? '/house-waste' : '/login' },
+    { icon: <Factory className="w-8 h-8 text-primary" />, label: 'Factory Waste', href: isLoggedIn ? dashboardUrl : '/login' },
+    { icon: <Trash2 className="w-8 h-8 text-primary" />, label: 'Food Waste', href: isLoggedIn ? dashboardUrl : '/login' },
+    { icon: <HeartPulse className="w-8 h-8 text-primary" />, label: 'Medic Waste', href: isLoggedIn ? '/medic-waste' : '/login' },
+    { icon: <Recycle className="w-8 h-8 text-primary" />, label: 'Recycle', href: isLoggedIn ? dashboardUrl : '/login' },
+    { icon: <Smartphone className="w-8 h-8 text-primary" />, label: 'E-Waste', href: isLoggedIn ? dashboardUrl : '/login' },
   ];
 
   const menuItems = [
-    { label: 'Status', href: '/submission-status' },
-    { label: 'Achievment', href: '/dashboard/points' },
+    { label: 'Status', href: isLoggedIn ? '/submission-status' : '/login' },
+    { label: 'Achievment', href: isLoggedIn ? '/dashboard/points' : '/login' },
     { label: 'About Us', href: '#' },
   ];
+  
+  const historyHref = isLoggedIn ? '/dashboard?tab=history' : '/login';
+  const pointsHref = isLoggedIn ? '/dashboard/points' : '/login';
+
+  if (loading) {
+    return (
+      <div className="flex flex-col min-h-screen bg-background text-foreground font-sans">
+        <header className="p-4 flex justify-between items-center">
+            <WasteGoLogo />
+            <Button variant="ghost" size="icon" className="md:hidden">
+              <Menu className="w-6 h-6"/>
+            </Button>
+        </header>
+        <main className="flex-grow px-4 pb-24">
+          <Skeleton className="relative h-48 rounded-2xl mb-6" />
+          
+          <div className="grid grid-cols-3 gap-3 mb-4">
+            {[...Array(6)].map((_, index) => (
+                <Card key={index} className="bg-primary/10 shadow-md rounded-2xl animate-pulse">
+                    <CardContent className="flex flex-col items-center justify-center p-2 text-center h-full aspect-square">
+                        <Skeleton className="bg-muted rounded-full p-3 mb-2 w-14 h-14" />
+                        <Skeleton className="h-4 w-16 bg-muted" />
+                    </CardContent>
+                </Card>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 mb-6">
+             <Skeleton className="h-12 rounded-lg bg-muted" />
+             <Skeleton className="h-12 rounded-lg bg-muted" />
+          </div>
+
+          <div className="space-y-3">
+              {[...Array(3)].map((_, index) => (
+                  <Skeleton key={index} className="h-16 rounded-lg bg-muted" />
+              ))}
+          </div>
+        </main>
+        
+        <BottomNav />
+    </div>
+    )
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground font-sans">
@@ -131,12 +179,12 @@ export default function Home() {
 
             <div className="grid grid-cols-2 gap-4 mb-6">
                  <Button asChild variant="secondary" className="h-12 text-base font-semibold shadow-md rounded-lg">
-                    <Link href="/dashboard/points">
+                    <Link href={pointsHref}>
                         <Award className="mr-2" /> Poin User
                     </Link>
                 </Button>
                 <Button asChild variant="secondary" className="h-12 text-base font-semibold shadow-md rounded-lg">
-                    <Link href="/dashboard/points">
+                    <Link href={historyHref}>
                         <History className="mr-2" /> View History
                     </Link>
                 </Button>
