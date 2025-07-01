@@ -50,8 +50,9 @@ export function SignupCompanyForm() {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
+      // Initialize Firestore doc creation promise
       const companyDocRef = doc(db, "companies", user.uid);
-      await setDoc(companyDocRef, {
+      const setDocPromise = setDoc(companyDocRef, {
         uid: user.uid,
         username,
         email,
@@ -61,19 +62,23 @@ export function SignupCompanyForm() {
         postalCode,
         nib,
         website,
-        companyProfileUrl: '', // Initialize as empty
+        companyProfileUrl: '', // Will be updated if there's a file
         role: 'company',
         createdAt: new Date(),
       });
-      
-      if (companyProfileFile) {
-        const storageRef = ref(storage, `company_profiles/${user.uid}/${companyProfileFile.name}`);
-        await uploadBytes(storageRef, companyProfileFile);
-        const downloadURL = await getDownloadURL(storageRef);
-        await updateDoc(companyDocRef, {
-          companyProfileUrl: downloadURL
-        });
-      }
+
+      // Handle file upload and update in parallel
+      const uploadAndUpdatePromise = companyProfileFile ? (async () => {
+          const storageRef = ref(storage, `company_profiles/${user.uid}/${companyProfileFile.name}`);
+          await uploadBytes(storageRef, companyProfileFile);
+          const downloadURL = await getDownloadURL(storageRef);
+          // The initial doc must be created before we can update it.
+          // We don't need to await here because Promise.all will handle it.
+          await updateDoc(companyDocRef, { companyProfileUrl: downloadURL });
+      })() : Promise.resolve();
+
+      // Wait for both promises (document creation and file upload/update) to complete
+      await Promise.all([setDocPromise, uploadAndUpdatePromise]);
 
       toast({
         title: "Pendaftaran Berhasil",
