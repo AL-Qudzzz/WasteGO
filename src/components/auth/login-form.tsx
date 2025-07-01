@@ -10,7 +10,8 @@ import { Mail, Eye, EyeOff, Loader2, Building, User } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { doc, getDoc } from 'firebase/firestore';
+import { auth, db } from '@/lib/firebase';
 import { 
   Dialog, 
   DialogContent, 
@@ -42,12 +43,30 @@ export function LoginForm() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Check user role from Firestore in parallel
+      const userDocRef = doc(db, "users", user.uid);
+      const companyDocRef = doc(db, "companies", user.uid);
+
+      const [userDoc, companyDoc] = await Promise.all([
+        getDoc(userDocRef),
+        getDoc(companyDocRef)
+      ]);
+      
       toast({
         title: "Login Successful",
         description: "Welcome back!",
       });
-      router.push('/dashboard');
+
+      if (companyDoc.exists()) {
+        router.push('/dashboard/company');
+      } else {
+        // Default to user dashboard, assuming a user doc should exist if not a company.
+        router.push('/dashboard');
+      }
+
     } catch (error: any) {
       console.error("Login error:", error);
       toast({

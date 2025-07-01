@@ -55,7 +55,7 @@ export function SignupCompanyForm() {
         title: "Pendaftaran Berhasil",
         description: "Akun perusahaan Anda telah dibuat.",
       });
-      router.push('/dashboard');
+      router.push('/dashboard/company');
 
     } catch (error: any) {
       console.error("Signup error:", error);

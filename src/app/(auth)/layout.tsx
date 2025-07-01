@@ -20,6 +20,7 @@ import {
   Newspaper,
   LogOut,
   ChevronDown,
+  User,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -38,10 +39,14 @@ import { BottomNav } from "@/components/layout/bottom-nav";
 
 const navItems = {
   user: [
-    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/dashboard", label: "Profile", icon: User },
     { href: "/dashboard/schedule", label: "Schedule Pickup", icon: Truck },
   ],
   courier: [{ href: "/dashboard", label: "Tasks", icon: LayoutDashboard }],
+  company: [
+    { href: "/dashboard/company", label: "Profile", icon: User },
+    { href: "/dashboard/schedule", label: "Schedule Pickup", icon: Truck },
+  ],
   admin: [
     { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
     { href: "/dashboard/manage-users", label: "Users", icon: Users },
@@ -55,6 +60,7 @@ const useRole = () => {
     const pathname = usePathname();
     if (pathname.includes('/admin')) return { role: 'admin', name: 'Admin User', email: 'admin@wastego.com'};
     if (pathname.includes('/courier')) return { role: 'courier', name: 'Courier', email: 'courier@wastego.com'};
+    if (pathname.includes('/company')) return { role: 'company', name: 'PT Eco Solutions', email: 'contact@ecosolutions.com'};
     return { role: 'user', name: 'Household User', email: 'user@wastego.com'};
 };
 
@@ -88,7 +94,7 @@ export default function DashboardLayout({
                   isActive={pathname === item.href}
                   tooltip={item.label}
                 >
-                  <Link href="#">
+                  <Link href={item.href}>
                     <item.icon />
                     <span>{item.label}</span>
                   </Link>
