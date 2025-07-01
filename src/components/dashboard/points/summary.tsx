@@ -1,6 +1,6 @@
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Home, Trash2, Factory, Coins } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Home, Trash2, Factory } from "lucide-react";
 
 const wasteCategories = [
     {
@@ -27,19 +27,6 @@ const wasteCategories = [
 export function PointsSummary() {
     return (
         <div className="space-y-6">
-            <Card className="bg-primary text-primary-foreground shadow-lg">
-                <CardHeader>
-                    <div className="flex justify-between items-center">
-                        <CardTitle className="text-primary-foreground">Total Poin</CardTitle>
-                        <Coins className="w-6 h-6 text-primary-foreground/80"/>
-                    </div>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-4xl font-bold">2.450</p>
-                    <p className="text-sm text-primary-foreground/80 mt-1">Poin dapat ditukar dengan berbagai hadiah</p>
-                </CardContent>
-            </Card>
-
             <div className="grid grid-cols-2 gap-4">
                 <Card>
                     <CardContent className="p-4">

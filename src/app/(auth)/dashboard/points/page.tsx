@@ -5,8 +5,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PointsSummary } from "@/components/dashboard/points/summary";
 import { PointsHistory } from "@/components/dashboard/points/history";
 import { PointsRewards } from "@/components/dashboard/points/rewards";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Coins } from "lucide-react";
 import Link from "next/link";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 
 export default function UserPointsPage() {
@@ -20,6 +21,19 @@ export default function UserPointsPage() {
         <h1 className="text-2xl font-bold">Poin Anda</h1>
         <p className="text-muted-foreground">Kelola poin reward Anda dan tukarkan dengan hadiah menarik.</p>
       </div>
+      
+      <Card className="bg-primary text-primary-foreground shadow-lg">
+          <CardHeader>
+              <div className="flex justify-between items-center">
+                  <CardTitle className="text-primary-foreground">Total Poin</CardTitle>
+                  <Coins className="w-6 h-6 text-primary-foreground/80"/>
+              </div>
+          </CardHeader>
+          <CardContent>
+              <p className="text-4xl font-bold">2.450</p>
+              <p className="text-sm text-primary-foreground/80 mt-1">Poin dapat ditukar dengan berbagai hadiah</p>
+          </CardContent>
+      </Card>
 
       <Tabs defaultValue="summary" className="w-full">
         <TabsList className="grid w-full grid-cols-3">
