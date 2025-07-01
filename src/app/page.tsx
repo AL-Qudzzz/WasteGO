@@ -38,14 +38,12 @@ const WasteGoLogo = () => (
 
 export default function Home() {
   const [dashboardUrl, setDashboardUrl] = useState('/login');
-  const [statusUrl, setStatusUrl] = useState('/login');
-
+  
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         let role: UserRole = null;
         let finalUrl = '/login';
-        let finalStatusUrl = '/login';
 
         const companyDocRef = doc(db, "companies", currentUser.uid);
         const companyDoc = await getDoc(companyDocRef);
@@ -65,27 +63,20 @@ export default function Home() {
         switch (role) {
             case 'company':
                 finalUrl = '/dashboard/company';
-                finalStatusUrl = '/dashboard/company';
                 break;
             case 'admin':
                 finalUrl = '/dashboard/admin';
-                finalStatusUrl = '/dashboard/admin';
                 break;
             case 'courier':
                 finalUrl = '/dashboard/courier';
-                finalStatusUrl = '/dashboard/courier';
                 break;
             default:
                 finalUrl = '/dashboard';
-                finalStatusUrl = '/dashboard?tab=history';
                 break;
         }
         setDashboardUrl(finalUrl);
-        setStatusUrl(finalStatusUrl);
-
       } else {
         setDashboardUrl('/login');
-        setStatusUrl('/login');
       }
     });
     return () => unsubscribe();
@@ -101,7 +92,7 @@ export default function Home() {
   ];
 
   const menuItems = [
-    { label: 'Status', href: statusUrl },
+    { label: 'Status', href: '/submission-status' },
     { label: 'Achievment', href: '/dashboard/points' },
     { label: 'About Us', href: '#' },
   ];
