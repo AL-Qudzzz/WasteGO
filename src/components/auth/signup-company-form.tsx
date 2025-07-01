@@ -7,22 +7,13 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
-import { User, Mail, Eye, EyeOff, Phone, MapPin, Loader2, Briefcase, FileText, Globe, UploadCloud } from 'lucide-react';
+import { User, Mail, Eye, EyeOff, Phone, MapPin, Loader2, Briefcase, FileText, Globe, UploadCloud, FileCheck2, X } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
-import { auth, db } from '@/lib/firebase';
-
-const GoogleIcon = () => (
-    <svg role="img" width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Google</title><path d="M12.48 10.92v3.28h7.84c-.24 1.84-.85 3.18-1.73 4.1-1.02 1.02-2.3 1.84-4.21 1.84-3.57 0-6.47-2.9-6.47-6.47s2.9-6.47 6.47-6.47c1.93 0 3.28.77 4.21 1.62l2.6-2.6C16.92 3.96 14.91 3 12.48 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c2.75 0 4.97-1.15 6.64-2.84 1.73-1.73 2.5-4.25 2.5-6.85 0-.58-.05-1.15-.15-1.72H12.48z" fill="#4285F4"/></svg>
-)
-
-const FacebookIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-    </svg>
-)
+import { doc, setDoc, updateDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { auth, db, storage } from '@/lib/firebase';
 
 export function SignupCompanyForm() {
   const router = useRouter();
@@ -36,10 +27,20 @@ export function SignupCompanyForm() {
   const [postalCode, setPostalCode] = useState('');
   const [nib, setNib] = useState('');
   const [website, setWebsite] = useState('');
-  // In a real app, you'd handle file state and upload logic here
-  // const [companyProfileFile, setCompanyProfileFile] = useState(null);
+  const [companyProfileFile, setCompanyProfileFile] = useState<File | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      if (file.size > 10 * 1024 * 1024) { // 10MB limit
+        toast({ variant: "destructive", title: "File terlalu besar", description: "Silakan unggah file yang lebih kecil dari 10MB." });
+        return;
+      }
+      setCompanyProfileFile(file);
+    }
+  };
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,7 +50,8 @@ export function SignupCompanyForm() {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      await setDoc(doc(db, "companies", user.uid), {
+      const companyDocRef = doc(db, "companies", user.uid);
+      await setDoc(companyDocRef, {
         uid: user.uid,
         username,
         email,
@@ -59,11 +61,19 @@ export function SignupCompanyForm() {
         postalCode,
         nib,
         website,
+        companyProfileUrl: '', // Initialize as empty
         role: 'company',
         createdAt: new Date(),
       });
       
-      // File upload logic to Firebase Storage would go here
+      if (companyProfileFile) {
+        const storageRef = ref(storage, `company_profiles/${user.uid}/${companyProfileFile.name}`);
+        await uploadBytes(storageRef, companyProfileFile);
+        const downloadURL = await getDownloadURL(storageRef);
+        await updateDoc(companyDocRef, {
+          companyProfileUrl: downloadURL
+        });
+      }
 
       toast({
         title: "Pendaftaran Berhasil",
@@ -151,14 +161,44 @@ export function SignupCompanyForm() {
         <div className="space-y-2">
           <Label>Profile Perusahaan</Label>
           <p className="text-xs text-muted-foreground">Unggah dokumen pendukung yang berisi profile atau dokumentasi perusahaan untuk melengkapi registrasi</p>
-          <div className="relative flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted">
-              <div className="flex flex-col items-center justify-center pt-5 pb-6 text-center">
-                  <UploadCloud className="w-8 h-8 mb-2 text-muted-foreground" />
-                  <p className="mb-1 text-sm text-muted-foreground"><span className="font-semibold">Klik untuk upload</span> atau drag & drop</p>
-                  <p className="text-xs text-muted-foreground">PDF, DOC, DOCX, JPG, PNG (Max. 10MB)</p>
-              </div>
-              <Input id="company-profile" type="file" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" disabled={isLoading} />
-          </div>
+          {!companyProfileFile ? (
+            <div className="relative flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted">
+                <div className="flex flex-col items-center justify-center pt-5 pb-6 text-center">
+                    <UploadCloud className="w-8 h-8 mb-2 text-muted-foreground" />
+                    <p className="mb-1 text-sm text-muted-foreground"><span className="font-semibold">Klik untuk upload</span> atau drag & drop</p>
+                    <p className="text-xs text-muted-foreground">PDF, DOC, DOCX, JPG, PNG (Max. 10MB)</p>
+                </div>
+                <Input 
+                  id="company-profile" 
+                  type="file" 
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
+                  disabled={isLoading}
+                  onChange={handleFileChange}
+                  accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                />
+            </div>
+          ) : (
+            <div className="flex items-center justify-between w-full p-3 border rounded-lg bg-muted/50">
+                <div className="flex items-center gap-3">
+                    <FileCheck2 className="w-6 h-6 text-primary" />
+                    <span className="text-sm font-medium truncate">{companyProfileFile.name}</span>
+                </div>
+                <Button 
+                    type="button" 
+                    variant="ghost" 
+                    size="icon" 
+                    className="w-8 h-8 text-muted-foreground hover:text-destructive"
+                    onClick={() => {
+                        setCompanyProfileFile(null);
+                        const fileInput = document.getElementById('company-profile') as HTMLInputElement;
+                        if(fileInput) fileInput.value = '';
+                    }}
+                    disabled={isLoading}
+                >
+                    <X className="w-4 h-4" />
+                </Button>
+            </div>
+          )}
         </div>
          <div className="space-y-2">
           <Label htmlFor="website">Website Perusahaan</Label>
@@ -182,23 +222,6 @@ export function SignupCompanyForm() {
             Masuk sekarang
           </Link>
         </p>
-
-        <div className="flex items-center my-6">
-            <div className="flex-grow border-t border-border"></div>
-            <span className="flex-shrink mx-4 text-xs text-muted-foreground">atau daftar dengan</span>
-            <div className="flex-grow border-t border-border"></div>
-        </div>
-
-        <div className="flex flex-col sm:flex-row gap-4">
-            <Button variant="outline" className="w-full flex items-center justify-center gap-2" disabled={isLoading}>
-                <GoogleIcon />
-                <span>Google</span>
-            </Button>
-            <Button variant="outline" className="w-full flex items-center justify-center gap-2 text-[#1877F2]" disabled={isLoading}>
-                <FacebookIcon />
-                <span>Facebook</span>
-            </Button>
-        </div>
     </>
   );
 }
