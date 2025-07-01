@@ -48,7 +48,13 @@ export default function DashboardLayout({
         const userDocSnap = await getDoc(userDocRef);
         if (userDocSnap.exists()) {
           setUserData(userDocSnap.data());
+        } else {
+          // User authenticated but no data in Firestore
+          setUserData(null);
         }
+      } else {
+        // User is signed out
+        setUserData(null);
       }
       setLoading(false);
     });
