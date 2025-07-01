@@ -1,3 +1,6 @@
+
+'use client';
+
 import {
   Home as HomeIcon,
   Factory,
@@ -8,8 +11,6 @@ import {
   Award,
   History,
   ChevronRight,
-  MapPin,
-  User,
   Leaf,
   Menu,
 } from 'lucide-react';
@@ -18,6 +19,12 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { BottomNav } from '@/components/layout/bottom-nav';
+import React, { useEffect, useState } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+import { auth, db } from '@/lib/firebase';
+
+type UserRole = 'user' | 'company' | 'admin' | 'courier' | null;
 
 const WasteGoLogo = () => (
     <div className="flex items-center gap-1">
@@ -29,22 +36,69 @@ const WasteGoLogo = () => (
     </div>
 )
 
-const categories = [
-  { icon: <HomeIcon className="w-8 h-8 text-primary" />, label: 'Household Waste', href: '#' },
-  { icon: <Factory className="w-8 h-8 text-primary" />, label: 'Factory Waste', href: '#' },
-  { icon: <Trash2 className="w-8 h-8 text-primary" />, label: 'Food Waste', href: '#' },
-  { icon: <HeartPulse className="w-8 h-8 text-primary" />, label: 'Medic Waste', href: '#' },
-  { icon: <Recycle className="w-8 h-8 text-primary" />, label: 'Recycle', href: '#' },
-  { icon: <Smartphone className="w-8 h-8 text-primary" />, label: 'Electronic Waste', href: '#' },
-];
-
-const menuItems = [
-  { label: 'Scheduling', href: '/login' },
-  { label: 'Achievment', href: '/login' },
-  { label: 'About Us', href: '#' },
-];
 
 export default function Home() {
+  const [dashboardUrl, setDashboardUrl] = useState('/login');
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        let role: UserRole = null;
+        let finalUrl = '/login';
+
+        const companyDocRef = doc(db, "companies", currentUser.uid);
+        const companyDoc = await getDoc(companyDocRef);
+        if (companyDoc.exists()) {
+          role = 'company';
+        } else {
+            const userDocRef = doc(db, "users", currentUser.uid);
+            const userDoc = await getDoc(userDocRef);
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                role = userData.role || 'user'; 
+            } else {
+                role = 'user'; // Fallback for safety
+            }
+        }
+        
+        switch (role) {
+            case 'company':
+                finalUrl = '/dashboard/company';
+                break;
+            case 'admin':
+                finalUrl = '/dashboard/admin';
+                break;
+            case 'courier':
+                finalUrl = '/dashboard/courier';
+                break;
+            default:
+                finalUrl = '/dashboard';
+                break;
+        }
+        setDashboardUrl(finalUrl);
+
+      } else {
+        setDashboardUrl('/login');
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const categories = [
+    { icon: <HomeIcon className="w-8 h-8 text-primary" />, label: 'Household Waste', href: dashboardUrl },
+    { icon: <Factory className="w-8 h-8 text-primary" />, label: 'Factory Waste', href: dashboardUrl },
+    { icon: <Trash2 className="w-8 h-8 text-primary" />, label: 'Food Waste', href: dashboardUrl },
+    { icon: <HeartPulse className="w-8 h-8 text-primary" />, label: 'Medic Waste', href: dashboardUrl },
+    { icon: <Recycle className="w-8 h-8 text-primary" />, label: 'Recycle', href: dashboardUrl },
+    { icon: <Smartphone className="w-8 h-8 text-primary" />, label: 'Electronic Waste', href: dashboardUrl },
+  ];
+
+  const menuItems = [
+    { label: 'Scheduling', href: dashboardUrl },
+    { label: 'Achievment', href: dashboardUrl },
+    { label: 'About Us', href: '#' },
+  ];
+
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground font-sans">
         <header className="p-4 flex justify-between items-center">
@@ -78,11 +132,15 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-2 gap-4 mb-6">
-                <Button variant="secondary" className="h-12 text-base font-semibold shadow-md rounded-lg">
-                    <Award className="mr-2" /> Poin User
+                 <Button asChild variant="secondary" className="h-12 text-base font-semibold shadow-md rounded-lg">
+                    <Link href={dashboardUrl}>
+                        <Award className="mr-2" /> Poin User
+                    </Link>
                 </Button>
-                <Button variant="secondary" className="h-12 text-base font-semibold shadow-md rounded-lg">
-                    <History className="mr-2" /> View History
+                <Button asChild variant="secondary" className="h-12 text-base font-semibold shadow-md rounded-lg">
+                    <Link href={dashboardUrl}>
+                        <History className="mr-2" /> View History
+                    </Link>
                 </Button>
             </div>
 
