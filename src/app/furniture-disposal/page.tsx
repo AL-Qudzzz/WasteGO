@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, Menu, Leaf, Info, Camera, MapPin } from 'lucide-react';
+import { ArrowLeft, Menu, Leaf, Info, Camera, MapPin, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -27,7 +27,12 @@ export default function FurnitureDisposalPage() {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         toast({
-            title: "Data Terkirim!",
+            title: (
+                <div className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-primary" />
+                    <span className="font-bold text-primary">Data Terkirim!</span>
+                </div>
+            ),
             description: "Terima kasih, data furniture Anda telah berhasil dikirim.",
         });
         (event.target as HTMLFormElement).reset();
