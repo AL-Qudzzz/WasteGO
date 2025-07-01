@@ -8,8 +8,15 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent } from "@/components/ui/card";
-import { useToast } from '@/hooks/use-toast';
 import { BottomNav } from '@/components/layout/bottom-nav';
+import { useState } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 const WasteGoLogo = () => (
     <div className="flex items-center gap-1">
@@ -22,19 +29,11 @@ const WasteGoLogo = () => (
 );
 
 export default function FurnitureDisposalPage() {
-    const { toast } = useToast();
+    const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
     
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        toast({
-            title: (
-                <div className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-primary" />
-                    <span className="font-bold text-primary">Data Terkirim!</span>
-                </div>
-            ),
-            description: "Terima kasih, data furniture Anda telah berhasil dikirim.",
-        });
+        setIsSuccessModalOpen(true);
         (event.target as HTMLFormElement).reset();
     };
 
@@ -107,6 +106,24 @@ export default function FurnitureDisposalPage() {
                     </CardContent>
                 </Card>
             </main>
+            <Dialog open={isSuccessModalOpen} onOpenChange={setIsSuccessModalOpen}>
+                <DialogContent className="sm:max-w-md p-8">
+                    <div className="flex flex-col items-center text-center space-y-4">
+                        <div className="bg-primary text-primary-foreground rounded-full p-4">
+                            <CheckCircle className="h-12 w-12" />
+                        </div>
+                        <DialogHeader className="space-y-2">
+                            <DialogTitle className="text-2xl font-bold text-foreground">Data Berhasil Dikirim!</DialogTitle>
+                            <DialogDescription className="text-muted-foreground">
+                            Transaksi Anda dalam proses verifikasi
+                            </DialogDescription>
+                        </DialogHeader>
+                        <Button className="w-full bg-primary hover:bg-primary/90" onClick={() => setIsSuccessModalOpen(false)}>
+                            Lihat status Pengajuan
+                        </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
             <BottomNav />
         </div>
     );
