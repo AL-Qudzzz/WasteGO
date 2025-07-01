@@ -41,7 +41,7 @@ export default function FurnitureDisposalPage() {
 
     const handleViewStatus = () => {
         setIsSuccessModalOpen(false);
-        router.push('/dashboard?tab=history');
+        router.push('/submission-status');
     };
 
     return (
