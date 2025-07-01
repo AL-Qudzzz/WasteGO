@@ -1,12 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, User, Phone, MapPin, Scale, Camera, Pencil, Leaf } from 'lucide-react';
+import { ArrowLeft, Menu, Leaf, Info, Camera, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from '@/hooks/use-toast';
 import { BottomNav } from '@/components/layout/bottom-nav';
 
@@ -26,8 +27,8 @@ export default function FurnitureDisposalPage() {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         toast({
-            title: "Penjemputan Terjadwal!",
-            description: "Penjemputan furniture Anda telah berhasil dijadwalkan.",
+            title: "Data Terkirim!",
+            description: "Terima kasih, data furniture Anda telah berhasil dikirim.",
         });
         (event.target as HTMLFormElement).reset();
     };
@@ -36,79 +37,70 @@ export default function FurnitureDisposalPage() {
         <div className="flex flex-col min-h-screen bg-muted/20 text-foreground font-sans">
             <header className="p-4 flex justify-between items-center bg-background border-b sticky top-0 z-10">
                 <WasteGoLogo />
+                <Button variant="ghost" size="icon" className="md:hidden">
+                    <Menu className="w-6 h-6"/>
+                </Button>
             </header>
+
             <main className="flex-grow p-4 pb-24 overflow-y-auto">
                 <Link href="/house-waste" className="flex items-center gap-2 mb-4 text-sm text-foreground font-medium">
                     <ArrowLeft className="w-4 h-4" />
                     Kembali
                 </Link>
-                 <div className="relative mb-6 pb-2">
-                    <h1 className="text-2xl font-bold text-foreground">Salurkan Furniture</h1>
-                    <div className="absolute bottom-0 left-0 w-24 h-1 bg-primary rounded-full"></div>
-                </div>
+                <h1 className="text-2xl font-bold text-foreground mb-4">Discarded Furniture</h1>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="space-y-2">
-                        <Label htmlFor="fullName" className="flex items-center gap-2"><User className="h-4 w-4" /> Nama Lengkap</Label>
-                        <Input id="fullName" placeholder="Masukkan nama lengkap Anda" required />
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="phone" className="flex items-center gap-2"><Phone className="h-4 w-4" /> Nomor Telepon</Label>
-                        <Input id="phone" type="tel" placeholder="Masukkan nomor telepon Anda" required />
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="address" className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Alamat Penjemputan</Label>
-                        <Textarea id="address" placeholder="Masukkan alamat lengkap Anda" required />
-                    </div>
-                    <div className="space-y-2">
-                        <Label>Jenis Furniture</Label>
-                        <RadioGroup defaultValue="table" className="grid grid-cols-2 gap-4 pt-2">
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="table" id="table" />
-                                <Label htmlFor="table">Meja</Label>
+                <Card className="bg-card shadow-lg rounded-2xl">
+                    <CardContent className="p-4 sm:p-6">
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                            <Alert className="bg-primary/10 border-primary/20">
+                                <Info className="h-5 w-5 text-primary" />
+                                <AlertTitle className="font-bold text-primary">Informasi Penting</AlertTitle>
+                                <AlertDescription className="text-primary/90">
+                                    Furnitur seperti kursi, meja, atau kasur akan ditangani melalui layanan khusus. Harap pastikan dalam kondisi kering dan siap diangkut (tidak terurai atau berantakan).
+                                </AlertDescription>
+                            </Alert>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="address" className="font-semibold text-foreground">Alamat Penjemputan *</Label>
+                                <Textarea id="address" placeholder="Masukkan alamat lengkap Anda" required className="bg-background" />
                             </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="chair" id="chair" />
-                                <Label htmlFor="chair">Kursi</Label>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="photo-upload" className="font-semibold text-foreground">Upload foto furniture tidak layak *</Label>
+                                <div 
+                                    className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-md cursor-pointer hover:border-primary"
+                                    onClick={() => document.getElementById('photo-upload-input')?.click()}
+                                >
+                                    <div className="space-y-1 text-center">
+                                        <Camera className="mx-auto h-12 w-12 text-muted-foreground" />
+                                        <p className="text-sm text-primary font-semibold">
+                                            Klik untuk upload foto
+                                        </p>
+                                        <p className="text-xs text-muted-foreground">
+                                            Format: JPG, PNG (Max 5MB)
+                                        </p>
+                                    </div>
+                                </div>
+                                <Input id="photo-upload-input" type="file" accept="image/jpeg,image/png" className="hidden" />
                             </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="cabinet" id="cabinet" />
-                                <Label htmlFor="cabinet">Lemari</Label>
+                            
+                            <div className="space-y-2">
+                                <Label htmlFor="dimensions" className="font-semibold text-foreground">Dimensi furniture ( p x l x t cm ) *</Label>
+                                <Input id="dimensions" placeholder="Contoh: 90 x 120 x 150 cm" required className="bg-background" />
                             </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="other" id="other" />
-                                <Label htmlFor="other">Lainnya</Label>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="description" className="font-semibold text-foreground">Deskripsi Mebel *</Label>
+                                <Textarea id="description" placeholder="Deskripsikan kondisi mebel Anda..." required className="bg-background" />
                             </div>
-                        </RadioGroup>
-                    </div>
-                     <div className="space-y-2">
-                        <Label htmlFor="weight" className="flex items-center gap-2"><Scale className="h-4 w-4" /> Perkiraan Berat (kg)</Label>
-                        <Input id="weight" type="number" placeholder="cth., 20" required min="1" />
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="photo" className="flex items-center gap-2"><Camera className="h-4 w-4" /> Foto Limbah</Label>
-                        <div className="p-4 border rounded-lg bg-card flex flex-col md:flex-row items-center gap-4">
-                            <div className="w-28 h-28 border-2 border-dashed rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
-                                <Camera className="w-8 h-8 text-muted-foreground" />
+
+                            <div className="flex flex-col gap-3 pt-4">
+                                <Button type="button" variant="secondary" className="bg-muted hover:bg-muted/90">Batal</Button>
+                                <Button type="submit" className="bg-primary hover:bg-primary/90">Kirim Data</Button>
                             </div>
-                            <div className="flex flex-col gap-2 w-full">
-                                <Button type="button" variant="outline" onClick={() => document.getElementById('photo-upload')?.click()}>
-                                    Upload Foto
-                                </Button>
-                                <Input id="photo-upload" type="file" accept="image/*" className="hidden"/>
-                                <Button type="button" onClick={() => document.getElementById('photo-capture')?.click()}>
-                                    Ambil Gambar
-                                </Button>
-                                <Input id="photo-capture" type="file" accept="image/*" capture="environment" className="hidden"/>
-                            </div>
-                        </div>
-                    </div>
-                     <div className="space-y-2">
-                        <Label htmlFor="notes" className="flex items-center gap-2"><Pencil className="h-4 w-4" /> Catatan Tambahan</Label>
-                        <Textarea id="notes" placeholder="Tulis catatan jika ada..." />
-                    </div>
-                    <Button type="submit" className="w-full">Jadwalkan Penjemputan</Button>
-                </form>
+                        </form>
+                    </CardContent>
+                </Card>
             </main>
             <BottomNav />
         </div>
