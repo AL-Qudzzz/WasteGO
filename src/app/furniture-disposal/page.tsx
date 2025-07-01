@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { ArrowLeft, Menu, Leaf, Info, Camera, MapPin, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -30,11 +31,17 @@ const WasteGoLogo = () => (
 
 export default function FurnitureDisposalPage() {
     const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+    const router = useRouter();
     
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setIsSuccessModalOpen(true);
         (event.target as HTMLFormElement).reset();
+    };
+
+    const handleViewStatus = () => {
+        setIsSuccessModalOpen(false);
+        router.push('/dashboard?tab=history');
     };
 
     return (
@@ -118,7 +125,7 @@ export default function FurnitureDisposalPage() {
                             Transaksi Anda dalam proses verifikasi
                             </DialogDescription>
                         </DialogHeader>
-                        <Button className="w-full bg-primary hover:bg-primary/90" onClick={() => setIsSuccessModalOpen(false)}>
+                        <Button className="w-full bg-primary hover:bg-primary/90" onClick={handleViewStatus}>
                             Lihat status Pengajuan
                         </Button>
                     </div>
