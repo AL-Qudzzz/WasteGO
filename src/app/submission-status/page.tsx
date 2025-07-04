@@ -1,23 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import { Leaf, ArrowLeft, Menu, Check, Circle, Clock, Info, Phone, Mail, RefreshCw } from 'lucide-react';
+import { ArrowLeft, Check, Circle, Clock, Info, Phone, Mail, RefreshCw } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BottomNav } from '@/components/layout/bottom-nav';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
-
-const WasteGoLogo = () => (
-    <div className="flex items-center gap-1">
-        <span className="text-3xl font-bold text-foreground">Waste</span>
-        <span className="text-3xl font-bold text-primary flex items-center">
-            GO
-            <Leaf className="w-5 h-5 text-primary -ml-2 -mt-3 transform -scale-x-100" strokeWidth={3} />
-        </span>
-    </div>
-);
+import { AppHeader } from '@/components/layout/app-header';
 
 const StatusStep = ({ icon, title, description, time, status, isLast, isCompleted, isInProgress }: { icon: React.ReactNode; title: string; description: string; time: string; status: string; isLast?: boolean; isCompleted?: boolean; isInProgress?: boolean; }) => (
     <div className="relative pl-12 pb-10 last:pb-0">
@@ -83,13 +74,7 @@ export default function SubmissionStatusPage() {
 
     return (
         <div className="flex flex-col min-h-screen bg-muted/20 text-foreground font-sans">
-            <header className="p-4 flex justify-between items-center bg-background border-b sticky top-0 z-10">
-                <WasteGoLogo />
-                <Button variant="ghost" size="icon" className="md:hidden">
-                    <Menu className="w-6 h-6"/>
-                </Button>
-            </header>
-
+            <AppHeader />
             <main className="flex-grow p-4 pb-24 overflow-y-auto">
                 <Link href="/" className="flex items-center gap-2 mb-4 text-sm text-foreground font-medium">
                     <ArrowLeft className="w-4 h-4" />

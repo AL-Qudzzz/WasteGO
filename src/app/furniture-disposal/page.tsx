@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Menu, Leaf, Info, Camera, MapPin, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Info, Camera } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -18,16 +18,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-
-const WasteGoLogo = () => (
-    <div className="flex items-center gap-1">
-        <span className="text-3xl font-bold text-foreground">Waste</span>
-        <span className="text-3xl font-bold text-primary flex items-center">
-            GO
-            <Leaf className="w-5 h-5 text-primary -ml-2 -mt-3 transform -scale-x-100" strokeWidth={3} />
-        </span>
-    </div>
-);
+import { AppHeader } from '@/components/layout/app-header';
+import { CheckCircle } from 'lucide-react';
 
 export default function FurnitureDisposalPage() {
     const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
@@ -46,13 +38,7 @@ export default function FurnitureDisposalPage() {
 
     return (
         <div className="flex flex-col min-h-screen bg-muted/20 text-foreground font-sans">
-            <header className="p-4 flex justify-between items-center bg-background border-b sticky top-0 z-10">
-                <WasteGoLogo />
-                <Button variant="ghost" size="icon" className="md:hidden">
-                    <Menu className="w-6 h-6"/>
-                </Button>
-            </header>
-
+            <AppHeader />
             <main className="flex-grow p-4 pb-24 overflow-y-auto">
                 <Link href="/house-waste" className="flex items-center gap-2 mb-4 text-sm text-foreground font-medium">
                     <ArrowLeft className="w-4 h-4" />

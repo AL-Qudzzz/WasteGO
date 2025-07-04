@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Leaf, ArrowLeft, Menu } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BottomNav } from '@/components/layout/bottom-nav';
@@ -13,16 +13,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-
-const WasteGoLogo = () => (
-    <div className="flex items-center gap-1">
-        <span className="text-3xl font-bold text-foreground">Waste</span>
-        <span className="text-3xl font-bold text-primary flex items-center">
-            GO
-            <Leaf className="w-5 h-5 text-primary -ml-2 -mt-3 transform -scale-x-100" strokeWidth={3} />
-        </span>
-    </div>
-);
+import { AppHeader } from '@/components/layout/app-header';
 
 const ProcessStep = ({ number, title, description, isLast }: { number: string; title: string; description: string; isLast?: boolean }) => (
   <div className="relative pl-16 pb-12 last:pb-0">
@@ -67,12 +58,7 @@ export default function MedicWastePage() {
 
     return (
         <div className="flex flex-col min-h-screen bg-muted/20 text-foreground font-sans">
-            <header className="p-4 flex justify-between items-center bg-background border-b sticky top-0 z-10">
-                <WasteGoLogo />
-                 <Button variant="ghost" size="icon" className="md:hidden">
-                    <Menu className="w-6 h-6"/>
-                </Button>
-            </header>
+            <AppHeader />
             <main className="flex-grow p-4 pb-24 overflow-y-auto">
                 <Link href="/" className="flex items-center gap-2 mb-4 text-sm text-foreground font-medium">
                     <ArrowLeft className="w-4 h-4" />

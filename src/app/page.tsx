@@ -10,8 +10,6 @@ import {
   Award,
   History,
   ChevronRight,
-  Leaf,
-  Menu,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -21,19 +19,9 @@ import { BottomNav } from '@/components/layout/bottom-nav';
 import React from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/context/auth-context';
+import { AppHeader } from '@/components/layout/app-header';
 
 type UserRole = 'user' | 'company' | 'admin' | 'courier' | null;
-
-const WasteGoLogo = () => (
-    <div className="flex items-center gap-1">
-        <span className="text-3xl font-bold text-foreground">Waste</span>
-        <span className="text-3xl font-bold text-primary flex items-center">
-            GO
-            <Leaf className="w-5 h-5 text-primary -ml-2 -mt-3 transform -scale-x-100" strokeWidth={3} />
-        </span>
-    </div>
-)
-
 
 export default function Home() {
   const { user, userData, loading } = useAuth();
@@ -78,12 +66,7 @@ export default function Home() {
   if (loading) {
     return (
       <div className="flex flex-col min-h-screen bg-background text-foreground font-sans">
-        <header className="p-4 flex justify-between items-center">
-            <WasteGoLogo />
-            <Button variant="ghost" size="icon" className="md:hidden">
-              <Menu className="w-6 h-6"/>
-            </Button>
-        </header>
+        <AppHeader />
         <main className="flex-grow px-4 pb-24">
           <Skeleton className="relative h-48 rounded-2xl mb-6" />
           
@@ -117,12 +100,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground font-sans">
-        <header className="p-4 flex justify-between items-center">
-            <WasteGoLogo />
-            <Button variant="ghost" size="icon" className="md:hidden">
-              <Menu className="w-6 h-6"/>
-            </Button>
-        </header>
+        <AppHeader />
         <main className="flex-grow px-4 pb-24">
             <div className="relative h-48 rounded-2xl overflow-hidden mb-6 shadow-md">
                 <Image src="https://i.imgur.com/CABdaYA.png" fill alt="Selamat Datang" data-ai-hint="recycling hands" className="object-cover" />
