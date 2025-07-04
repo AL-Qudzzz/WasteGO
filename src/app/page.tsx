@@ -69,7 +69,7 @@ export default function Home() {
   const menuItems = [
     { label: 'Status', href: isLoggedIn ? '/submission-status' : '/login' },
     { label: 'Achievment', href: isLoggedIn ? '/dashboard/points' : '/login' },
-    { label: 'About Us', href: '#' },
+    { label: 'About Us', href: '/about-us' },
   ];
   
   const historyHref = isLoggedIn ? '/dashboard?tab=history' : '/login';
