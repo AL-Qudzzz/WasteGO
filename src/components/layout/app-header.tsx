@@ -7,6 +7,7 @@ import {
   Sheet,
   SheetContent,
   SheetHeader,
+  SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useAuth } from '@/context/auth-context';
@@ -46,6 +47,7 @@ export function AppHeader() {
             <SheetContent side="left" className="w-[300px] sm:w-[350px] bg-background p-0">
                 <SheetHeader className="p-4 border-b">
                     <WasteGoLogo inSheet={true} />
+                    <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
                 </SheetHeader>
                 <div className="p-4">
                     <nav className="flex flex-col gap-2">
