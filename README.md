@@ -10,3 +10,21 @@ WasteGo is a comprehensive platform designed to streamline waste management and 
 - **Environmental Impact Tracking:** Tools and dashboards to visualize the positive environmental impact of using WasteGo.
 - **Reward System:** Incentivizing responsible waste disposal through a points and rewards system.
 - **Role-Based Access:** Distinct user roles (user, courier, admin, company) with tailored functionalities.
+
+## Contributors
+
+- **UI Development and Project Idea:** Syifa Najwa Azzahra
+- **Fullstack Development and Tester:** Muhammad Faiqul Umam Dzunnuroeni
+
+## Installation
+
+To set up and run WasteGo locally, follow these steps:
+
+**Prerequisites:**
+
+- Node.js (v14 or higher)
+- npm or yarn
+
+**Steps:**
+
+1. **Clone the repository:**
