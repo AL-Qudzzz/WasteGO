@@ -36,17 +36,19 @@ export default function PaymentPage() {
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
+        // Set payment status in localStorage upon successful payment
+        localStorage.setItem('paymentCompleted', 'true');
         setIsSuccessModalOpen(true);
     };
 
     const handleTrackPickup = () => {
         setIsSuccessModalOpen(false);
-        router.push('/submission-status');
+        router.push('/track-pickup');
     };
     
     const handleViewDetails = () => {
         setIsSuccessModalOpen(false);
-        // You can navigate to a different page for details, e.g., router.push('/order-details/WG-2024-001234');
+        router.push('/submission-status');
     };
 
     return (

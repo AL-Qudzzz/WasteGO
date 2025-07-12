@@ -10,8 +10,30 @@ import { AppHeader } from '@/components/layout/app-header';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function TrackPickupPage() {
+    const router = useRouter();
+    const [isAllowed, setIsAllowed] = useState(false);
+
+    useEffect(() => {
+        const paymentCompleted = localStorage.getItem('paymentCompleted') === 'true';
+        if (!paymentCompleted) {
+            router.replace('/'); 
+        } else {
+            setIsAllowed(true);
+        }
+    }, [router]);
+
+    if (!isAllowed) {
+        return (
+            <div className="flex flex-col min-h-screen bg-muted/20 text-foreground font-sans justify-center items-center">
+                <p>Mengarahkan...</p>
+            </div>
+        );
+    }
+
     return (
         <div className="flex flex-col min-h-screen bg-muted/20 text-foreground font-sans">
             <AppHeader />
