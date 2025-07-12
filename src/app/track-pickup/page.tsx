@@ -65,10 +65,6 @@ export default function TrackPickupPage() {
                             <Button className="flex-1">
                                 <Phone className="mr-2" /> Hubungi Kurir
                             </Button>
-                            <Input placeholder="Kirim pesan ke kurir..." className="flex-2"/>
-                             <Button size="icon" variant="ghost" className="shrink-0">
-                                <Send className="w-5 h-5"/>
-                            </Button>
                         </div>
                     </CardContent>
                 </Card>
