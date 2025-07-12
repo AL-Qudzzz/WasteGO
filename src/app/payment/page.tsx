@@ -115,10 +115,10 @@ export default function PaymentPage() {
                 <Button onClick={handleSubmit} className="w-full h-12 text-lg mt-6">Bayar Sekarang</Button>
             </main>
             <Dialog open={isSuccessModalOpen} onOpenChange={setIsSuccessModalOpen}>
-                <DialogContent className="sm:max-w-md p-8 rounded-lg">
+                <DialogContent className="sm:max-w-md p-8 rounded-[5px]">
                     <div className="flex flex-col items-center text-center space-y-4">
-                        <div className="bg-primary text-primary-foreground rounded-full p-4">
-                            <CheckCircle className="h-12 w-12" />
+                         <div className="bg-primary/10 text-primary rounded-full p-4">
+                            <CheckCircle className="h-16 w-16" />
                         </div>
                         <DialogHeader className="space-y-2">
                             <DialogTitle className="text-2xl font-bold text-foreground">Pembayaran Berhasil!</DialogTitle>
