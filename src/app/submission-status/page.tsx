@@ -182,9 +182,11 @@ export default function SubmissionStatusPage() {
 
                 <div className="space-y-3">
                     {refreshed ? (
-                         <Button className="w-full h-12 bg-primary hover:bg-primary/90">
-                           <Wallet className="w-4 h-4 mr-2"/>
-                            Payment
+                         <Button asChild className="w-full h-12 bg-primary hover:bg-primary/90">
+                           <Link href="/payment">
+                                <Wallet className="w-4 h-4 mr-2"/>
+                                Payment
+                           </Link>
                         </Button>
                     ) : (
                          <Button onClick={handleRefresh} className="w-full h-12 bg-primary hover:bg-primary/90">
