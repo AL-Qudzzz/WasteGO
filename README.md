@@ -16,11 +16,4 @@ WasteGo is a comprehensive platform designed to streamline waste management and 
 - **UI Development and Project Idea:** Syifa Najwa Azzahra
 - **Fullstack Development and Tester:** Muhammad Faiqul Umam Dzunnuroeni
 
-## Installation
 
-To set up and run WasteGo locally, follow these steps:
-
-**Prerequisites:**
-
-- Node.js (v14 or higher)
-- npm or yarn
