@@ -2,12 +2,11 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowLeft, CreditCard, Landmark, Wallet, ShieldCheck, CheckCircle } from 'lucide-react';
+import { ArrowLeft, CheckCircle, QrCode, Landmark, Wallet, Truck, Coins, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { BottomNav } from '@/components/layout/bottom-nav';
 import { AppHeader } from '@/components/layout/app-header';
@@ -20,7 +19,16 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useRouter } from 'next/navigation';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 
+
+const paymentMethods = [
+    { id: 'qris', label: 'QRIS', description: 'Scan QR Code untuk bayar', icon: <QrCode className="w-6 h-6 text-foreground" /> },
+    { id: 'transfer', label: 'Transfer Bank', description: 'BCA, Mandiri, BNI, BRI', icon: <Landmark className="w-6 h-6 text-foreground" /> },
+    { id: 'ewallet', label: 'E-Wallet', description: 'OVO, GoPay, DANA, ShopeePay', icon: <Wallet className="w-6 h-6 text-foreground" /> },
+    { id: 'cod', label: 'COD', description: 'Bayar ditempat', icon: <Truck className="w-6 h-6 text-foreground" /> },
+    { id: 'poin', label: 'Poin', description: 'Tukar dengan Poin Reward kamu', icon: <Coins className="w-6 h-6 text-foreground" /> },
+]
 
 export default function PaymentPage() {
     const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
@@ -45,82 +53,66 @@ export default function PaymentPage() {
                     Kembali
                 </Link>
                 <div className="relative mb-6 pb-2">
-                    <h1 className="text-2xl font-bold text-foreground">Payment</h1>
+                    <h1 className="text-2xl font-bold text-foreground">Pembayaran</h1>
                     <div className="absolute bottom-0 left-0 w-24 h-1 bg-primary rounded-full"></div>
                 </div>
 
-                <Card className="mb-6 shadow-md">
+                <Card className="mb-6 shadow-md rounded-lg">
                     <CardHeader>
-                        <CardTitle>Ringkasan Pesanan</CardTitle>
+                        <CardTitle>Detail Pembayaran</CardTitle>
                     </CardHeader>
-                    <CardContent>
-                        <div className="space-y-3">
-                            <div className="flex justify-between">
-                                <span className="text-muted-foreground">ID Penyaluran</span>
-                                <span className="font-medium">WG-2024-001234</span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span className="text-muted-foreground">Jenis Sampah</span>
-                                <span className="font-medium">Discard Furniture</span>
-                            </div>
-                            <Separator />
-                            <div className="flex justify-between text-lg font-bold">
-                                <span>Total</span>
-                                <span>Rp 50.000</span>
-                            </div>
+                    <CardContent className="space-y-4">
+                        <div className="flex justify-between items-center text-sm">
+                            <span className="text-muted-foreground">ID Penyaluran :</span>
+                            <span className="font-medium">WG-2024-001234</span>
+                        </div>
+                        <div className="flex justify-between items-center text-sm">
+                            <span className="text-muted-foreground">Jenis Sampah :</span>
+                            <span className="font-medium">Discard Furniture</span>
+                        </div>
+                         <div className="flex justify-between items-center text-sm">
+                            <span className="text-muted-foreground">Estimasi Dimensi :</span>
+                            <span className="font-medium">90x120x150 cm</span>
+                        </div>
+                        <Separator />
+                        <div className="flex justify-between items-center text-lg">
+                            <span className="font-bold">Total Pembayaran:</span>
+                            <span className="font-bold text-primary">Rp 100.000,00</span>
                         </div>
                     </CardContent>
                 </Card>
 
-                <Card className="shadow-md">
+                <Card className="shadow-md rounded-lg">
                     <CardHeader>
                         <CardTitle>Pilih Metode Pembayaran</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <Tabs defaultValue="credit-card" className="w-full">
-                            <TabsList className="grid w-full grid-cols-3">
-                                <TabsTrigger value="credit-card"><CreditCard className="w-4 h-4 mr-2" />Kartu</TabsTrigger>
-                                <TabsTrigger value="bank-transfer"><Landmark className="w-4 h-4 mr-2" />Transfer</TabsTrigger>
-                                <TabsTrigger value="e-wallet"><Wallet className="w-4 h-4 mr-2" />E-Wallet</TabsTrigger>
-                            </TabsList>
-                            <TabsContent value="credit-card" className="mt-6">
-                                <form onSubmit={handleSubmit} className="space-y-4">
-                                    <div className="space-y-1">
-                                        <Label htmlFor="card-number">Nomor Kartu</Label>
-                                        <Input id="card-number" placeholder="0000 0000 0000 0000" />
+                        <RadioGroup defaultValue="qris" className="space-y-4">
+                            {paymentMethods.map(method => (
+                                <Label key={method.id} htmlFor={method.id} className="flex items-center p-4 rounded-lg border has-[:checked]:bg-primary/10 has-[:checked]:border-primary cursor-pointer transition-colors">
+                                    <div className="bg-primary/20 p-2 rounded-md mr-4">
+                                        {method.icon}
                                     </div>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div className="space-y-1">
-                                            <Label htmlFor="expiry-date">Tanggal Kedaluwarsa</Label>
-                                            <Input id="expiry-date" placeholder="MM/YY" />
-                                        </div>
-                                        <div className="space-y-1">
-                                            <Label htmlFor="cvv">CVV</Label>
-                                            <Input id="cvv" placeholder="123" />
-                                        </div>
+                                    <div className="flex-grow">
+                                        <p className="font-semibold text-foreground">{method.label}</p>
+                                        <p className="text-xs text-muted-foreground">{method.description}</p>
                                     </div>
-                                    <div className="space-y-1">
-                                        <Label htmlFor="card-name">Nama Pemegang Kartu</Label>
-                                        <Input id="card-name" placeholder="Nama lengkap Anda" />
-                                    </div>
-                                     <div className="flex items-center gap-2 text-sm text-muted-foreground pt-4">
-                                        <ShieldCheck className="w-5 h-5 text-primary" />
-                                        <span>Pembayaran Anda aman dan terenkripsi.</span>
-                                    </div>
-                                </form>
-                            </TabsContent>
-                            <TabsContent value="bank-transfer" className="mt-6 text-center">
-                                <p className="text-muted-foreground">Instruksi transfer bank akan ditampilkan di sini.</p>
-                            </TabsContent>
-                             <TabsContent value="e-wallet" className="mt-6 text-center">
-                                <p className="text-muted-foreground">Opsi e-wallet akan ditampilkan di sini.</p>
-                            </TabsContent>
-                        </Tabs>
+                                    <RadioGroupItem value={method.id} id={method.id} />
+                                </Label>
+                            ))}
+                        </RadioGroup>
                     </CardContent>
-                     <CardFooter>
-                        <Button onClick={handleSubmit} className="w-full h-12 text-lg">Bayar Sekarang</Button>
-                    </CardFooter>
                 </Card>
+
+                <Alert className="mt-6 bg-primary/10 border-primary/20 text-primary">
+                    <Info className="h-5 w-5" />
+                    <AlertTitle className="font-semibold">Dapatkan Poin Reward!</AlertTitle>
+                    <AlertDescription>
+                        Setiap pembayaran Rp 1.000 = 1 poin. Tukarkan poin dengan voucher menarik!
+                    </AlertDescription>
+                </Alert>
+
+                <Button onClick={handleSubmit} className="w-full h-12 text-lg mt-6">Bayar Sekarang</Button>
             </main>
             <Dialog open={isSuccessModalOpen} onOpenChange={setIsSuccessModalOpen}>
                 <DialogContent className="sm:max-w-md p-8 rounded-lg">
