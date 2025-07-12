@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowLeft, CheckCircle, QrCode, Landmark, Wallet, Truck, Coins, Info } from 'lucide-react';
+import { ArrowLeft, CheckCircle, QrCode, Landmark, Wallet, Truck, Coins, Info, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -39,9 +39,14 @@ export default function PaymentPage() {
         setIsSuccessModalOpen(true);
     };
 
-    const handleBackToHome = () => {
+    const handleTrackPickup = () => {
         setIsSuccessModalOpen(false);
-        router.push('/');
+        router.push('/submission-status');
+    };
+    
+    const handleViewDetails = () => {
+        setIsSuccessModalOpen(false);
+        // You can navigate to a different page for details, e.g., router.push('/order-details/WG-2024-001234');
     };
 
     return (
@@ -115,20 +120,37 @@ export default function PaymentPage() {
                 <Button onClick={handleSubmit} className="w-full h-12 text-lg mt-6">Bayar Sekarang</Button>
             </main>
             <Dialog open={isSuccessModalOpen} onOpenChange={setIsSuccessModalOpen}>
-                <DialogContent className="sm:max-w-md p-8 rounded-[5px]">
+                <DialogContent className="sm:max-w-md p-6 rounded-lg">
                     <div className="flex flex-col items-center text-center space-y-4">
-                         <div className="bg-primary/10 text-primary rounded-full p-4">
-                            <CheckCircle className="h-16 w-16" />
+                         <div className="bg-primary text-primary-foreground rounded-full p-3">
+                            <CheckCircle className="h-12 w-12" />
                         </div>
-                        <DialogHeader className="space-y-2">
+                        <DialogHeader className="space-y-1 pb-2">
                             <DialogTitle className="text-2xl font-bold text-foreground">Pembayaran Berhasil!</DialogTitle>
-                            <DialogDescription className="text-muted-foreground">
-                            Terima kasih! Pembayaran Anda telah dikonfirmasi.
+                            <DialogDescription className="text-muted-foreground text-sm">
+                            Transaksi Anda telah berhasil diproses
                             </DialogDescription>
                         </DialogHeader>
-                        <Button className="w-full bg-primary hover:bg-primary/90" onClick={handleBackToHome}>
-                            Kembali ke Home
-                        </Button>
+
+                        <Card className="w-full bg-green-50 border-green-200 shadow-sm">
+                            <CardContent className="p-4 text-center space-y-2">
+                                <div className="flex justify-center items-center gap-2">
+                                    <div className="bg-yellow-400 text-white p-1 rounded-full"><Star className="w-5 h-5 fill-current"/></div>
+                                    <h3 className="font-semibold text-lg">Selamat! Anda mendapatkan</h3>
+                                </div>
+                                <p className="text-4xl font-bold text-foreground">150 <span className="text-2xl">Poin</span></p>
+                                <p className="text-xs text-muted-foreground">Poin telah ditambahkan ke akun Anda</p>
+                            </CardContent>
+                        </Card>
+                        
+                        <div className="w-full space-y-2 pt-2">
+                            <Button className="w-full bg-primary hover:bg-primary/90" onClick={handleTrackPickup}>
+                                Lacak Penjemputan
+                            </Button>
+                             <Button variant="secondary" className="w-full" onClick={handleViewDetails}>
+                                Lihat detail pemesanan
+                            </Button>
+                        </div>
                     </div>
                 </DialogContent>
             </Dialog>
