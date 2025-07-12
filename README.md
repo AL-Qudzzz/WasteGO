@@ -24,7 +24,3 @@ To set up and run WasteGo locally, follow these steps:
 
 - Node.js (v14 or higher)
 - npm or yarn
-
-**Steps:**
-
-1. **Clone the repository:**
