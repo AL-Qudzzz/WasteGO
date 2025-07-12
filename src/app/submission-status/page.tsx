@@ -46,7 +46,7 @@ export default function SubmissionStatusPage() {
         {
             icon: <Check className="w-6 h-6" />,
             title: 'Data Uploaded',
-            description: 'Upload foto, berat, dan deskripsi makanan',
+            description: 'Upload foto, berat, dan deskripsi Barang',
             time: '15 Desember 2024, 14:30 WIB',
             status: 'Selesai',
             isCompleted: true,
@@ -80,7 +80,7 @@ export default function SubmissionStatusPage() {
             {
                 icon: <Check className="w-6 h-6" />,
                 title: 'Data Uploaded',
-                description: 'Upload foto, berat, dan deskripsi makanan',
+                description: 'Upload foto, berat, dan deskripsi Barang',
                 time: '15 Desember 2024, 14:30 WIB',
                 status: 'Selesai',
                 isCompleted: true,
@@ -139,7 +139,7 @@ export default function SubmissionStatusPage() {
                          <StatusStep 
                             key={index}
                             icon={step.icon}
-                            title={step.title}
+                            title={step.title} 
                             description={step.description}
                             time={step.time}
                             status={step.status}
