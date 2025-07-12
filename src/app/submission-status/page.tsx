@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, Check, Circle, Clock, Info, Phone, Mail, RefreshCw } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowLeft, Check, Circle, Clock, Info, Phone, Mail, RefreshCw, Wallet } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BottomNav } from '@/components/layout/bottom-nav';
@@ -32,7 +33,7 @@ const StatusStep = ({ icon, title, description, time, status, isLast, isComplete
                 !isCompleted && !isInProgress && "bg-gray-100 text-gray-500 border-transparent hover:bg-gray-100"
             )}>
                 {isCompleted && <Check className="w-3.5 h-3.5 mr-1.5" />}
-                {!isCompleted && <Circle className="w-2.5 h-2.5 mr-1.5 fill-current" />}
+                {!isCompleted && !isInProgress && <Circle className="w-2.5 h-2.5 mr-1.5 fill-current" />}
                 {status}
             </Badge>
         </div>
@@ -41,8 +42,7 @@ const StatusStep = ({ icon, title, description, time, status, isLast, isComplete
 
 
 export default function SubmissionStatusPage() {
-    
-    const trackingSteps = [
+    const initialSteps = [
         {
             icon: <Check className="w-6 h-6" />,
             title: 'Data Uploaded',
@@ -72,6 +72,44 @@ export default function SubmissionStatusPage() {
         }
     ];
 
+    const [steps, setSteps] = useState(initialSteps);
+    const [refreshed, setRefreshed] = useState(false);
+
+    const handleRefresh = () => {
+        const updatedSteps = [
+            {
+                icon: <Check className="w-6 h-6" />,
+                title: 'Data Uploaded',
+                description: 'Upload foto, berat, dan deskripsi makanan',
+                time: '15 Desember 2024, 14:30 WIB',
+                status: 'Selesai',
+                isCompleted: true,
+                isInProgress: false,
+            },
+            {
+                icon: <Check className="w-6 h-6" />,
+                title: 'Verifikasi Berhasil',
+                description: 'Tim kami sedang memverifikasi data yang dikirim',
+                time: '15 Desember 2024, 16:50 WIB',
+                status: 'Selesai',
+                isCompleted: true,
+                isInProgress: false,
+            },
+            {
+                icon: <Check className="w-6 h-6" />,
+                title: 'Permintaan Disetujui',
+                description: 'Tim kami akan mengambil sampahmu pada;',
+                time: '16 Desember 2024 | 13.00',
+                status: 'Selesai',
+                isCompleted: true,
+                isInProgress: false,
+            }
+        ];
+        setSteps(updatedSteps);
+        setRefreshed(true);
+    };
+    
+
     return (
         <div className="flex flex-col min-h-screen bg-muted/20 text-foreground font-sans">
             <AppHeader />
@@ -91,13 +129,13 @@ export default function SubmissionStatusPage() {
                     </CardHeader>
                     <CardContent className="text-sm text-muted-foreground space-y-2 pt-0">
                         <div className="flex justify-between"><span>ID Penyaluran:</span> <span className="font-medium text-foreground">WG-2024-001234</span></div>
-                        <div className="flex justify-between"><span>Jenis Sampah:</span> <span className="font-medium text-foreground">Inedible Food</span></div>
+                        <div className="flex justify-between"><span>Jenis Sampah:</span> <span className="font-medium text-foreground">Discard Furniture</span></div>
                         <div className="flex justify-between"><span>Estimasi Berat:</span> <span className="font-medium text-foreground">90×120×150 cm</span></div>
                     </CardContent>
                 </Card>
 
                 <div className="bg-card shadow-lg rounded-2xl p-6 mb-6">
-                    {trackingSteps.map((step, index) => (
+                    {steps.map((step, index) => (
                          <StatusStep 
                             key={index}
                             icon={step.icon}
@@ -107,12 +145,17 @@ export default function SubmissionStatusPage() {
                             status={step.status}
                             isCompleted={step.isCompleted}
                             isInProgress={step.isInProgress}
-                            isLast={index === trackingSteps.length - 1} 
+                            isLast={index === steps.length - 1} 
                         />
                     ))}
+                    {refreshed && (
+                         <div className="text-center text-sm text-muted-foreground mt-4 p-2 bg-gray-50 rounded-md">
+                           Lokasi penjemputan: Jl. Mawar No. 123...
+                         </div>
+                    )}
                 </div>
-
-                <Alert className="mb-6 bg-card border-border">
+                
+                 <Alert className="mb-6 bg-card border-border">
                     <Clock className="h-5 w-5 text-primary" />
                     <AlertTitle className="font-bold text-foreground">Estimasi Waktu</AlertTitle>
                     <AlertDescription className="text-muted-foreground">
@@ -136,11 +179,19 @@ export default function SubmissionStatusPage() {
                     </AlertDescription>
                 </Alert>
 
+
                 <div className="space-y-3">
-                    <Button className="w-full h-12 bg-primary hover:bg-primary/90">
-                        <RefreshCw className="w-4 h-4 mr-2"/>
-                        Refresh Status
-                    </Button>
+                    {refreshed ? (
+                         <Button className="w-full h-12 bg-primary hover:bg-primary/90">
+                           <Wallet className="w-4 h-4 mr-2"/>
+                            Payment
+                        </Button>
+                    ) : (
+                         <Button onClick={handleRefresh} className="w-full h-12 bg-primary hover:bg-primary/90">
+                            <RefreshCw className="w-4 h-4 mr-2"/>
+                            Refresh Status
+                        </Button>
+                    )}
                     <Button variant="outline" className="w-full h-12">
                         Status Penjemputan & Penyaluran
                     </Button>
