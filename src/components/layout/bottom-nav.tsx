@@ -35,7 +35,7 @@ export function BottomNav() {
 
   const bottomNavItems = [
     { icon: <Home className="w-6 h-6" />, label: 'Home', href: '/', active: pathname === '/' },
-    { icon: <MapPin className="w-6 h-6" />, label: 'Location', href: '#', active: pathname === '/location' },
+    { icon: <MapPin className="w-6 h-6" />, label: 'Lacak', href: '/track-pickup', active: pathname === '/track-pickup' },
     { icon: <User className="w-6 h-6" />, label: 'Profile', href: profileHref, active: pathname.startsWith('/dashboard') || pathname === '/login' || pathname.startsWith('/signup') },
   ];
 
