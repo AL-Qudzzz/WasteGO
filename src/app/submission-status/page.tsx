@@ -1,8 +1,9 @@
+
 'use client';
 
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Check, Circle, Clock, Info, Phone, Mail, RefreshCw, Wallet, FileText, PackagePlus } from 'lucide-react';
+import { ArrowLeft, Check, Circle, Clock, Info, Phone, Mail, RefreshCw, Wallet, FileText, PackagePlus, Truck } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BottomNav } from '@/components/layout/bottom-nav';
@@ -34,6 +35,7 @@ const StatusStep = ({ icon, title, description, time, status, isLast, isComplete
                 !isCompleted && !isInProgress && "bg-gray-100 text-gray-500 border-transparent hover:bg-gray-100"
             )}>
                 {isCompleted && <Check className="w-3.5 h-3.5 mr-1.5" />}
+                {isInProgress && <RefreshCw className="w-3.5 h-3.5 mr-1.5 animate-spin" />}
                 {!isCompleted && !isInProgress && <Circle className="w-2.5 h-2.5 mr-1.5 fill-current" />}
                 {status}
             </Badge>
@@ -79,22 +81,23 @@ const LoadingState = () => (
 export default function SubmissionStatusPage() {
     const [hasSubmission, setHasSubmission] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [paymentCompleted, setPaymentCompleted] = useState(false);
 
     const initialSteps = [
         {
             icon: <Check className="w-6 h-6" />,
-            title: 'Data Uploaded',
+            title: 'Data Terkirim',
             description: 'Upload foto, berat, dan deskripsi Barang',
-            time: '15 Desember 2024, 14:30 WIB',
+            time: '15 Juli 2024, 14:30 WIB',
             status: 'Selesai',
             isCompleted: true,
             isInProgress: false,
         },
         {
-            icon: <Circle className="w-3 h-3 fill-current" />,
+            icon: <RefreshCw className="w-6 h-6" />,
             title: 'Sedang Verifikasi',
             description: 'Tim kami sedang memverifikasi data yang dikirim',
-            time: '15 Desember 2024, 14:45 WIB',
+            time: '15 Juli 2024, 14:45 WIB',
             status: 'Sedang Proses',
             isCompleted: false,
             isInProgress: true,
@@ -110,52 +113,94 @@ export default function SubmissionStatusPage() {
         }
     ];
 
+    const approvedSteps = [
+        ...initialSteps.slice(0, 1),
+        {
+            icon: <Check className="w-6 h-6" />,
+            title: 'Verifikasi Berhasil',
+            description: 'Data Anda telah berhasil diverifikasi oleh tim kami.',
+            time: '15 Juli 2024, 16:50 WIB',
+            status: 'Selesai',
+            isCompleted: true,
+            isInProgress: false,
+        },
+        {
+            icon: <Check className="w-6 h-6" />,
+            title: 'Permintaan Disetujui',
+            description: 'Pengajuan Anda disetujui. Silakan lanjutkan ke pembayaran.',
+            time: '15 Juli 2024, 16:55 WIB',
+            status: 'Selesai',
+            isCompleted: true,
+            isInProgress: false,
+        },
+        {
+            icon: <Wallet className="w-5 h-5" />,
+            title: 'Menunggu Pembayaran',
+            description: 'Lanjutkan untuk menyelesaikan pembayaran biaya layanan.',
+            time: 'Menunggu',
+            status: 'Menunggu',
+            isCompleted: false,
+            isInProgress: false,
+        }
+    ];
+    
+    const postPaymentSteps = [
+         ...approvedSteps.slice(0, 3),
+        {
+            icon: <Check className="w-6 h-6" />,
+            title: 'Pembayaran Berhasil',
+            description: 'Pembayaran Anda telah kami terima.',
+            time: '16 Juli 2024, 10:05 WIB',
+            status: 'Selesai',
+            isCompleted: true,
+            isInProgress: false,
+        },
+        {
+            icon: <Truck className="w-5 h-5" />,
+            title: 'Menunggu Kurir',
+            description: 'Kurir kami sedang dalam perjalanan ke lokasi Anda.',
+            time: 'Penjemputan dijadwalkan hari ini',
+            status: 'Sedang Proses',
+            isCompleted: false,
+            isInProgress: true,
+        },
+    ];
+
     const [steps, setSteps] = useState(initialSteps);
-    const [refreshed, setRefreshed] = useState(false);
+    const [isApproved, setIsApproved] = useState(false);
 
     useEffect(() => {
-        // localStorage is only available on the client side.
-        const submissionStatus = localStorage.getItem('submissionMade');
-        if (submissionStatus === 'true') {
-            setHasSubmission(true);
+        setIsLoading(true);
+        const submissionStatus = localStorage.getItem('submissionMade') === 'true';
+        const paymentStatus = localStorage.getItem('paymentCompleted') === 'true';
+        
+        setHasSubmission(submissionStatus);
+        setPaymentCompleted(paymentStatus);
+
+        if (paymentStatus) {
+            setSteps(postPaymentSteps);
+            setIsApproved(true);
+        } else if (isApproved) {
+            setSteps(approvedSteps);
+        } else {
+             setSteps(initialSteps);
         }
+        
         setIsLoading(false);
-    }, []);
+    }, [isApproved]);
 
     const handleRefresh = () => {
-        const updatedSteps = [
-            {
-                icon: <Check className="w-6 h-6" />,
-                title: 'Data Uploaded',
-                description: 'Upload foto, berat, dan deskripsi Barang',
-                time: '15 Desember 2024, 14:30 WIB',
-                status: 'Selesai',
-                isCompleted: true,
-                isInProgress: false,
-            },
-            {
-                icon: <Check className="w-6 h-6" />,
-                title: 'Verifikasi Berhasil',
-                description: 'Tim kami sedang memverifikasi data yang dikirim',
-                time: '15 Desember 2024, 16:50 WIB',
-                status: 'Selesai',
-                isCompleted: true,
-                isInProgress: false,
-            },
-            {
-                icon: <Check className="w-6 h-6" />,
-                title: 'Permintaan Disetujui',
-                description: 'Tim kami akan mengambil sampahmu pada;',
-                time: '16 Desember 2024 | 13.00',
-                status: 'Selesai',
-                isCompleted: true,
-                isInProgress: false,
-            }
-        ];
-        setSteps(updatedSteps);
-        setRefreshed(true);
+        if (!isApproved) {
+            setIsApproved(true);
+            setSteps(approvedSteps);
+        }
     };
     
+    const handleCancel = () => {
+        localStorage.removeItem('submissionMade');
+        localStorage.removeItem('paymentCompleted');
+        window.location.reload();
+    };
 
     return (
         <div className="flex flex-col min-h-screen bg-muted/20 text-foreground font-sans">
@@ -199,11 +244,6 @@ export default function SubmissionStatusPage() {
                                     isLast={index === steps.length - 1} 
                                 />
                             ))}
-                            {refreshed && (
-                                <div className="text-center text-sm text-muted-foreground mt-4 p-2 bg-gray-50 rounded-md">
-                                Lokasi penjemputan: Jl. Mawar No. 123...
-                                </div>
-                            )}
                         </div>
                         
                         <Alert className="mb-6 bg-card border-border">
@@ -232,24 +272,27 @@ export default function SubmissionStatusPage() {
 
 
                         <div className="space-y-3">
-                            {refreshed ? (
+                            {isApproved && !paymentCompleted ? (
                                 <Button asChild className="w-full h-12 bg-primary hover:bg-primary/90">
-                                <Link href="/payment">
+                                    <Link href="/payment">
                                         <Wallet className="w-4 h-4 mr-2"/>
                                         Lanjut ke Pembayaran
-                                </Link>
+                                    </Link>
                                 </Button>
-                            ) : (
+                            ) : !paymentCompleted ? (
                                 <Button onClick={handleRefresh} className="w-full h-12 bg-primary hover:bg-primary/90">
                                     <RefreshCw className="w-4 h-4 mr-2"/>
                                     Refresh Status
                                 </Button>
+                            ) : (
+                                 <Button asChild className="w-full h-12 bg-primary hover:bg-primary/90">
+                                    <Link href="/track-pickup">
+                                        <Truck className="w-4 h-4 mr-2"/>
+                                        Lacak Kurir
+                                    </Link>
+                                </Button>
                             )}
-                            <Button variant="outline" className="w-full h-12" onClick={() => {
-                                localStorage.removeItem('submissionMade');
-                                localStorage.removeItem('paymentCompleted');
-                                window.location.reload();
-                            }}>
+                            <Button variant="outline" className="w-full h-12" onClick={handleCancel}>
                                 Batalkan Pengajuan
                             </Button>
                         </div>
