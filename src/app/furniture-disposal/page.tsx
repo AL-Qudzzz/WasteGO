@@ -27,6 +27,8 @@ export default function FurnitureDisposalPage() {
     
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        // Set a flag in localStorage to indicate a submission has been made
+        localStorage.setItem('submissionMade', 'true');
         setIsSuccessModalOpen(true);
         (event.target as HTMLFormElement).reset();
     };
@@ -34,6 +36,10 @@ export default function FurnitureDisposalPage() {
     const handleViewStatus = () => {
         setIsSuccessModalOpen(false);
         router.push('/submission-status');
+    };
+
+    const handleCancel = () => {
+        router.back();
     };
 
     return (
@@ -92,7 +98,7 @@ export default function FurnitureDisposalPage() {
                             </div>
 
                             <div className="flex flex-col gap-3 pt-4">
-                                <Button type="button" variant="secondary" className="bg-muted hover:bg-muted/90">Batal</Button>
+                                <Button type="button" variant="secondary" onClick={handleCancel} className="bg-muted hover:bg-muted/90">Batal</Button>
                                 <Button type="submit" className="bg-primary hover:bg-primary/90">Kirim Data</Button>
                             </div>
                         </form>

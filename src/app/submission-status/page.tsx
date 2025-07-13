@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import React, { useState } from 'react';
-import { ArrowLeft, Check, Circle, Clock, Info, Phone, Mail, RefreshCw, Wallet } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ArrowLeft, Check, Circle, Clock, Info, Phone, Mail, RefreshCw, Wallet, FileText, PackagePlus } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BottomNav } from '@/components/layout/bottom-nav';
@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
 import { AppHeader } from '@/components/layout/app-header';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const StatusStep = ({ icon, title, description, time, status, isLast, isCompleted, isInProgress }: { icon: React.ReactNode; title: string; description: string; time: string; status: string; isLast?: boolean; isCompleted?: boolean; isInProgress?: boolean; }) => (
     <div className="relative pl-12 pb-10 last:pb-0">
@@ -40,8 +41,45 @@ const StatusStep = ({ icon, title, description, time, status, isLast, isComplete
     </div>
 );
 
+const EmptyState = () => (
+    <div className="text-center py-16 px-4">
+        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 mb-6">
+            <FileText className="h-10 w-10 text-primary" />
+        </div>
+        <h2 className="text-2xl font-bold text-foreground mb-2">Belum Ada Pengajuan</h2>
+        <p className="text-muted-foreground mb-6 max-w-md mx-auto">Anda belum memiliki pengajuan penyaluran sampah. Mulai sekarang untuk membantu lingkungan!</p>
+        <Button asChild>
+            <Link href="/house-waste">
+                <PackagePlus className="mr-2 h-4 w-4" />
+                Buat Pengajuan Baru
+            </Link>
+        </Button>
+    </div>
+);
+
+const LoadingState = () => (
+    <div className="space-y-6">
+        <Card className="bg-card shadow-lg rounded-2xl mb-6">
+            <CardHeader><Skeleton className="h-6 w-1/2" /></CardHeader>
+            <CardContent className="space-y-3 pt-0">
+                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-4 w-2/3" />
+                <Skeleton className="h-4 w-1/2" />
+            </CardContent>
+        </Card>
+        <div className="bg-card shadow-lg rounded-2xl p-6 mb-6 space-y-8">
+            <Skeleton className="h-16 w-full" />
+            <Skeleton className="h-16 w-full" />
+            <Skeleton className="h-16 w-full" />
+        </div>
+    </div>
+);
+
 
 export default function SubmissionStatusPage() {
+    const [hasSubmission, setHasSubmission] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+
     const initialSteps = [
         {
             icon: <Check className="w-6 h-6" />,
@@ -74,6 +112,15 @@ export default function SubmissionStatusPage() {
 
     const [steps, setSteps] = useState(initialSteps);
     const [refreshed, setRefreshed] = useState(false);
+
+    useEffect(() => {
+        // localStorage is only available on the client side.
+        const submissionStatus = localStorage.getItem('submissionMade');
+        if (submissionStatus === 'true') {
+            setHasSubmission(true);
+        }
+        setIsLoading(false);
+    }, []);
 
     const handleRefresh = () => {
         const updatedSteps = [
@@ -123,81 +170,93 @@ export default function SubmissionStatusPage() {
                     <div className="absolute bottom-0 left-0 w-32 h-1 bg-primary rounded-full"></div>
                 </div>
 
-                <Card className="bg-card shadow-lg rounded-2xl mb-6">
-                    <CardHeader>
-                        <CardTitle className="text-lg">Tracking Penyaluran Sampah</CardTitle>
-                    </CardHeader>
-                    <CardContent className="text-sm text-muted-foreground space-y-2 pt-0">
-                        <div className="flex justify-between"><span>ID Penyaluran:</span> <span className="font-medium text-foreground">WG-2024-001234</span></div>
-                        <div className="flex justify-between"><span>Jenis Sampah:</span> <span className="font-medium text-foreground">Discard Furniture</span></div>
-                        <div className="flex justify-between"><span>Estimasi Berat:</span> <span className="font-medium text-foreground">90×120×150 cm</span></div>
-                    </CardContent>
-                </Card>
+                {isLoading ? (
+                    <LoadingState />
+                ) : hasSubmission ? (
+                    <>
+                        <Card className="bg-card shadow-lg rounded-2xl mb-6">
+                            <CardHeader>
+                                <CardTitle className="text-lg">Tracking Penyaluran Sampah</CardTitle>
+                            </CardHeader>
+                            <CardContent className="text-sm text-muted-foreground space-y-2 pt-0">
+                                <div className="flex justify-between"><span>ID Penyaluran:</span> <span className="font-medium text-foreground">WG-2024-001234</span></div>
+                                <div className="flex justify-between"><span>Jenis Sampah:</span> <span className="font-medium text-foreground">Discard Furniture</span></div>
+                                <div className="flex justify-between"><span>Estimasi Dimensi:</span> <span className="font-medium text-foreground">90×120×150 cm</span></div>
+                            </CardContent>
+                        </Card>
 
-                <div className="bg-card shadow-lg rounded-2xl p-6 mb-6">
-                    {steps.map((step, index) => (
-                         <StatusStep 
-                            key={index}
-                            icon={step.icon}
-                            title={step.title} 
-                            description={step.description}
-                            time={step.time}
-                            status={step.status}
-                            isCompleted={step.isCompleted}
-                            isInProgress={step.isInProgress}
-                            isLast={index === steps.length - 1} 
-                        />
-                    ))}
-                    {refreshed && (
-                         <div className="text-center text-sm text-muted-foreground mt-4 p-2 bg-gray-50 rounded-md">
-                           Lokasi penjemputan: Jl. Mawar No. 123...
-                         </div>
-                    )}
-                </div>
-                
-                 <Alert className="mb-6 bg-card border-border">
-                    <Clock className="h-5 w-5 text-primary" />
-                    <AlertTitle className="font-bold text-foreground">Estimasi Waktu</AlertTitle>
-                    <AlertDescription className="text-muted-foreground">
-                        Proses verifikasi membutuhkan waktu 2-4 jam kerja. Tim kami akan segera menghubungi Anda setelah verifikasi selesai.
-                    </AlertDescription>
-                </Alert>
-
-                <Alert className="mb-6 bg-primary/10 border-primary/20">
-                    <Info className="h-5 w-5 text-primary" />
-                    <AlertTitle className="font-bold text-primary">Butuh Bantuan?</AlertTitle>
-                    <AlertDescription className="text-primary/90 space-y-2">
-                        <p>Hubungi tim customer service kami jika ada pertanyaan:</p>
-                        <div className="flex items-center gap-2">
-                            <Phone className="w-4 h-4" />
-                            <span>+62 812-3456-7890</span>
+                        <div className="bg-card shadow-lg rounded-2xl p-6 mb-6">
+                            {steps.map((step, index) => (
+                                <StatusStep 
+                                    key={index}
+                                    icon={step.icon}
+                                    title={step.title} 
+                                    description={step.description}
+                                    time={step.time}
+                                    status={step.status}
+                                    isCompleted={step.isCompleted}
+                                    isInProgress={step.isInProgress}
+                                    isLast={index === steps.length - 1} 
+                                />
+                            ))}
+                            {refreshed && (
+                                <div className="text-center text-sm text-muted-foreground mt-4 p-2 bg-gray-50 rounded-md">
+                                Lokasi penjemputan: Jl. Mawar No. 123...
+                                </div>
+                            )}
                         </div>
-                         <div className="flex items-center gap-2">
-                            <Mail className="w-4 h-4" />
-                            <span>support@wastego.id</span>
+                        
+                        <Alert className="mb-6 bg-card border-border">
+                            <Clock className="h-5 w-5 text-primary" />
+                            <AlertTitle className="font-bold text-foreground">Estimasi Waktu</AlertTitle>
+                            <AlertDescription className="text-muted-foreground">
+                                Proses verifikasi membutuhkan waktu 2-4 jam kerja. Tim kami akan segera menghubungi Anda setelah verifikasi selesai.
+                            </AlertDescription>
+                        </Alert>
+
+                        <Alert className="mb-6 bg-primary/10 border-primary/20">
+                            <Info className="h-5 w-5 text-primary" />
+                            <AlertTitle className="font-bold text-primary">Butuh Bantuan?</AlertTitle>
+                            <AlertDescription className="text-primary/90 space-y-2">
+                                <p>Hubungi tim customer service kami jika ada pertanyaan:</p>
+                                <div className="flex items-center gap-2">
+                                    <Phone className="w-4 h-4" />
+                                    <span>+62 812-3456-7890</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Mail className="w-4 h-4" />
+                                    <span>support@wastego.id</span>
+                                </div>
+                            </AlertDescription>
+                        </Alert>
+
+
+                        <div className="space-y-3">
+                            {refreshed ? (
+                                <Button asChild className="w-full h-12 bg-primary hover:bg-primary/90">
+                                <Link href="/payment">
+                                        <Wallet className="w-4 h-4 mr-2"/>
+                                        Lanjut ke Pembayaran
+                                </Link>
+                                </Button>
+                            ) : (
+                                <Button onClick={handleRefresh} className="w-full h-12 bg-primary hover:bg-primary/90">
+                                    <RefreshCw className="w-4 h-4 mr-2"/>
+                                    Refresh Status
+                                </Button>
+                            )}
+                            <Button variant="outline" className="w-full h-12" onClick={() => {
+                                localStorage.removeItem('submissionMade');
+                                localStorage.removeItem('paymentCompleted');
+                                window.location.reload();
+                            }}>
+                                Batalkan Pengajuan
+                            </Button>
                         </div>
-                    </AlertDescription>
-                </Alert>
-
-
-                <div className="space-y-3">
-                    {refreshed ? (
-                         <Button asChild className="w-full h-12 bg-primary hover:bg-primary/90">
-                           <Link href="/payment">
-                                <Wallet className="w-4 h-4 mr-2"/>
-                                Payment
-                           </Link>
-                        </Button>
-                    ) : (
-                         <Button onClick={handleRefresh} className="w-full h-12 bg-primary hover:bg-primary/90">
-                            <RefreshCw className="w-4 h-4 mr-2"/>
-                            Refresh Status
-                        </Button>
-                    )}
-                    <Button variant="outline" className="w-full h-12">
-                        Status Penjemputan & Penyaluran
-                    </Button>
-                </div>
+                    </>
+                ) : (
+                    <EmptyState />
+                )}
 
             </main>
             <BottomNav />
