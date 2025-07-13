@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -6,12 +7,68 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Briefcase, Mail, Phone, MapPin, KeyRound, LogOut, Globe, FileText } from "lucide-react";
+import { Briefcase, Mail, Phone, MapPin, KeyRound, LogOut, Globe, FileText, Loader2 } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useState, useEffect } from "react";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { useToast } from "@/hooks/use-toast";
 
 export default function CompanyProfilePage() {
-  const { userData: companyProfile, loading, logout } = useAuth();
+  const { user, userData: companyProfile, loading, logout } = useAuth();
+  const { toast } = useToast();
+  
+  const [companyName, setCompanyName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
+  const [website, setWebsite] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    if (companyProfile) {
+      setCompanyName(companyProfile.companyName || '');
+      setPhone(companyProfile.phone || '');
+      setAddress(companyProfile.address || '');
+      setWebsite(companyProfile.website || '');
+    }
+  }, [companyProfile]);
+
+  const handleSaveChanges = async () => {
+    if (!user) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "You must be logged in to save changes.",
+      });
+      return;
+    }
+    
+    setIsSaving(true);
+    try {
+      const companyDocRef = doc(db, "companies", user.uid);
+      await updateDoc(companyDocRef, {
+        companyName,
+        phone,
+        address,
+        website,
+      });
+      toast({
+        title: "Success",
+        description: "Profile updated successfully.",
+      });
+    } catch (error) {
+       console.error("Error updating profile: ", error);
+       toast({
+        variant: "destructive",
+        title: "Update Failed",
+        description: "Could not update profile. Please try again.",
+      });
+    } finally {
+        setIsSaving(false);
+    }
+  };
+
 
   if (loading) {
     return (
@@ -64,7 +121,7 @@ export default function CompanyProfilePage() {
           <form className="space-y-4">
             <div>
               <Label htmlFor="companyName" className="flex items-center gap-2 mb-1"><Briefcase className="h-4 w-4 text-muted-foreground" /> Nama Perusahaan</Label>
-              <Input id="companyName" defaultValue={companyProfile.companyName} />
+              <Input id="companyName" value={companyName} onChange={(e) => setCompanyName(e.target.value)} disabled={isSaving} />
             </div>
             <div>
               <Label htmlFor="email" className="flex items-center gap-2 mb-1"><Mail className="h-4 w-4 text-muted-foreground" /> Email</Label>
@@ -72,15 +129,15 @@ export default function CompanyProfilePage() {
             </div>
             <div>
               <Label htmlFor="phone" className="flex items-center gap-2 mb-1"><Phone className="h-4 w-4 text-muted-foreground" /> Nomor Telepon</Label>
-              <Input id="phone" type="tel" defaultValue={companyProfile.phone} />
+              <Input id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} disabled={isSaving} />
             </div>
             <div>
               <Label htmlFor="address" className="flex items-center gap-2 mb-1"><MapPin className="h-4 w-4 text-muted-foreground" /> Alamat</Label>
-              <Input id="address" defaultValue={companyProfile.address} />
+              <Input id="address" value={address} onChange={(e) => setAddress(e.target.value)} disabled={isSaving} />
             </div>
              <div>
               <Label htmlFor="website" className="flex items-center gap-2 mb-1"><Globe className="h-4 w-4 text-muted-foreground" /> Website</Label>
-              <Input id="website" defaultValue={companyProfile.website} />
+              <Input id="website" value={website} onChange={(e) => setWebsite(e.target.value)} disabled={isSaving} />
             </div>
              <div>
               <Label htmlFor="nib" className="flex items-center gap-2 mb-1"><FileText className="h-4 w-4 text-muted-foreground" /> NIB</Label>
@@ -89,7 +146,10 @@ export default function CompanyProfilePage() {
           </form>
         </CardContent>
         <CardFooter>
-          <Button className="w-full">Simpan Perubahan</Button>
+          <Button className="w-full" onClick={handleSaveChanges} disabled={isSaving}>
+            {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Simpan Perubahan
+          </Button>
         </CardFooter>
       </Card>
 
