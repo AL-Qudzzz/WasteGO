@@ -11,7 +11,7 @@ import { Separator } from '@/components/ui/separator';
 const completedPickups = [
     {
         id: 'WG-2024-001234',
-        date: '16 Desember 2024',
+        date: '16 Juli 2024',
         wasteType: 'Discard Furniture',
         points: 150,
         status: 'Selesai',
@@ -19,7 +19,7 @@ const completedPickups = [
     },
     {
         id: 'WG-2024-001211',
-        date: '10 Desember 2024',
+        date: '10 Juli 2024',
         wasteType: 'Used Cooking Oil',
         points: 50,
         status: 'Selesai',
@@ -27,7 +27,7 @@ const completedPickups = [
     },
     {
         id: 'WG-2024-001198',
-        date: '02 Desember 2024',
+        date: '02 Juli 2024',
         wasteType: 'E-Waste',
         points: 200,
         status: 'Selesai',
