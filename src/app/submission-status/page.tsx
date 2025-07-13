@@ -49,7 +49,7 @@ const EmptyState = () => (
         <h2 className="text-2xl font-bold text-foreground mb-2">Belum Ada Pengajuan</h2>
         <p className="text-muted-foreground mb-6 max-w-md mx-auto">Anda belum memiliki pengajuan penyaluran sampah. Mulai sekarang untuk membantu lingkungan!</p>
         <Button asChild>
-            <Link href="/house-waste">
+            <Link href="/">
                 <PackagePlus className="mr-2 h-4 w-4" />
                 Buat Pengajuan Baru
             </Link>
