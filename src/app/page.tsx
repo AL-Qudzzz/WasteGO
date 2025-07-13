@@ -60,7 +60,7 @@ export default function Home() {
     { label: 'About Us', href: '/about-us' },
   ];
   
-  const historyHref = isLoggedIn ? '/dashboard?tab=history' : '/login';
+  const historyHref = isLoggedIn ? '/history' : '/login';
   const pointsHref = isLoggedIn ? '/dashboard/points' : '/login';
 
   if (loading) {
