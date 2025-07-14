@@ -1,3 +1,4 @@
+
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
@@ -72,6 +73,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     await signOut(auth);
+    // Clear submission and payment status from localStorage on logout
+    if (typeof window !== 'undefined') {
+        localStorage.removeItem('submissionMade');
+        localStorage.removeItem('paymentCompleted');
+    }
     router.push('/');
   };
 
