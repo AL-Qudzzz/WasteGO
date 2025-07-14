@@ -1,8 +1,9 @@
+
 'use client';
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowLeft, CheckCircle, QrCode, Landmark, Wallet, Truck, Coins, Info, Star } from 'lucide-react';
+import { ArrowLeft, CheckCircle, QrCode, Landmark, Wallet, Truck, Coins, Info, Star, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -13,6 +14,14 @@ import { AppHeader } from '@/components/layout/app-header';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+} from '@/components/ui/dialog';
 
 
 const paymentMethods = [
@@ -25,14 +34,23 @@ const paymentMethods = [
 
 export default function PaymentPage() {
     const router = useRouter();
+    const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-        // Set payment status in localStorage upon successful payment
         localStorage.setItem('paymentCompleted', 'true');
-        // Redirect to subscribe page, which will now show as a modal/dialog
-        router.push('/subscribe');
+        setIsSuccessModalOpen(true);
     };
+
+    const handleTrackPickup = () => {
+        setIsSuccessModalOpen(false);
+        router.push('/track-pickup');
+    };
+
+    const handleViewSubmissionStatus = () => {
+        setIsSuccessModalOpen(false);
+        router.push('/submission-status');
+    }
 
     return (
         <div className="flex flex-col min-h-screen bg-muted/20 text-foreground font-sans">
@@ -104,6 +122,48 @@ export default function PaymentPage() {
 
                 <Button onClick={handleSubmit} className="w-full h-12 text-lg mt-6">Bayar Sekarang</Button>
             </main>
+
+            <Dialog open={isSuccessModalOpen} onOpenChange={setIsSuccessModalOpen}>
+                <DialogContent hideClose={false} className="sm:max-w-sm p-6 rounded-lg">
+                     <div className="flex flex-col items-center text-center space-y-4">
+                        <div className="bg-primary text-primary-foreground rounded-full p-3">
+                            <CheckCircle className="h-10 w-10" />
+                        </div>
+                        <DialogHeader className="space-y-1">
+                            <DialogTitle className="text-2xl font-bold text-foreground">Pembayaran Berhasil!</DialogTitle>
+                            <DialogDescription className="text-muted-foreground text-base">
+                                Transaksi Anda telah berhasil diproses
+                            </DialogDescription>
+                        </DialogHeader>
+
+                        <Card className="bg-green-50 border-green-200 text-green-900 w-full text-center">
+                            <CardContent className="p-4 space-y-2">
+                                <div className="flex items-center justify-center gap-2">
+                                    <div className="bg-primary text-primary-foreground rounded-full p-2">
+                                        <Star className="w-5 h-5" />
+                                    </div>
+                                    <div>
+                                        <p className="font-bold text-lg">Selamat!</p>
+                                        <p className="text-sm">Anda mendapatkan</p>
+                                    </div>
+                                </div>
+                                <p className="text-3xl font-bold">150 <span className="text-xl">Poin</span></p>
+                                <p className="text-xs text-muted-foreground">Poin telah ditambahkan ke akun Anda</p>
+                            </CardContent>
+                        </Card>
+                        
+                        <div className="w-full space-y-3 pt-2">
+                             <Button className="w-full h-12" onClick={handleTrackPickup}>
+                                Lacak Penjemputan
+                            </Button>
+                            <Button variant="outline" className="w-full h-12" onClick={handleViewSubmissionStatus}>
+                                Lihat detail pemesanan
+                            </Button>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
+
             <BottomNav />
         </div>
     );
