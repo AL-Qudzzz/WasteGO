@@ -91,4 +91,4 @@ A brief overview of the key directories in this project:
 ## Contributors
 
 - **UI/UX and Project Idea:** Syifa Najwa Azzahra
-- **Fullstack Development and Tester:** Muhammad Faiqul Umam Dzunnuroeni
+- **Fullstack Development and Tester Web:** Muhammad Faiqul Umam Dzunnuroeni
