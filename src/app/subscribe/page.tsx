@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -123,7 +124,7 @@ export function SubscribeDialog({ open, onOpenChange }: { open: boolean, onOpenC
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-md p-0 overflow-hidden">
+            <DialogContent className="max-w-md p-0 flex flex-col max-h-[90vh]">
                  <DialogHeader className="p-4 flex flex-row items-center gap-4 border-b">
                     <div className="bg-primary/20 text-primary p-3 rounded-full">
                         <MapPin className="w-6 h-6" />
@@ -139,7 +140,7 @@ export function SubscribeDialog({ open, onOpenChange }: { open: boolean, onOpenC
                         </Button>
                     </DialogClose>
                 </DialogHeader>
-                <div className="max-h-[70vh] overflow-y-auto p-4 space-y-4">
+                <div className="flex-1 overflow-y-auto p-4 space-y-4">
                     <Card className="bg-green-50 border-green-200 text-green-800">
                         <CardContent className="p-4">
                             <Badge variant="secondary" className="bg-green-200 text-green-900 mb-2">PENAWARAN TERBATAS</Badge>
@@ -198,7 +199,7 @@ export function SubscribeDialog({ open, onOpenChange }: { open: boolean, onOpenC
                         </CardContent>
                     </Card>
                 </div>
-                 <footer className="bg-background border-t p-4 z-10">
+                 <footer className="bg-background border-t p-4 z-10 shrink-0">
                      <div className="p-3 rounded-lg border bg-muted mb-3">
                         <div className="flex justify-between items-center">
                             <span className="text-md font-bold">Total</span>
