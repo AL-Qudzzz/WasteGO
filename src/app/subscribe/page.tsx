@@ -145,10 +145,10 @@ export function SubscribeDialog({ open, onOpenChange }: { open: boolean, onOpenC
                                {currentPlan && currentPlan.price !== discountedPrice && (
                                  <p className="text-xs text-muted-foreground line-through">Rp{currentPlan.price.toLocaleString('id-ID')}</p>
                                )}
-                               <p className="text-xl font-bold text-primary flex items-center gap-2">
+                               <div className="text-xl font-bold text-primary flex items-center gap-2">
                                 Rp{discountedPrice.toLocaleString('id-ID')}
                                 {currentPlan && currentPlan.price !== discountedPrice && <Badge className="bg-green-200 text-green-800">-30%</Badge>}
-                               </p>
+                               </div>
                             </div>
                         </div>
                     </div>
