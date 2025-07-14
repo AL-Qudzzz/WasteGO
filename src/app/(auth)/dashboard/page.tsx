@@ -8,11 +8,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { User, Mail, Phone, MapPin, KeyRound, LogOut } from "lucide-react";
+import { User, Mail, Phone, MapPin, KeyRound, LogOut, Star } from "lucide-react";
 import Link from "next/link";
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/context/auth-context';
 import { SubscribeDialog } from '@/app/subscribe/page';
+import { Badge } from '@/components/ui/badge';
 
 function DashboardContent() {
   const { userData: userProfile, loading, logout } = useAuth();
@@ -59,8 +60,18 @@ function DashboardContent() {
       <div className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>Profil Pengguna</CardTitle>
-            <CardDescription>Kelola informasi profil dan pengaturan akun Anda.</CardDescription>
+            <div className="flex justify-between items-center">
+                <div>
+                    <CardTitle>Profil Pengguna</CardTitle>
+                    <CardDescription>Kelola informasi profil dan pengaturan akun Anda.</CardDescription>
+                </div>
+                {userProfile.subscription?.status === 'active' && (
+                    <Badge variant="secondary" className="bg-yellow-200 text-yellow-800 border-yellow-300">
+                        <Star className="w-3.5 h-3.5 mr-1.5" />
+                        Subscribed
+                    </Badge>
+                )}
+            </div>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="flex flex-col items-center space-y-4">

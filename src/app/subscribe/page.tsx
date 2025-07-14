@@ -17,6 +17,12 @@ import {
   DialogDescription,
   DialogClose,
 } from '@/components/ui/dialog';
+import { useAuth } from '@/context/auth-context';
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { useToast } from '@/hooks/use-toast';
+import { Loader2 } from 'lucide-react';
+
 
 const subscriptionPlans = [
     {
@@ -62,20 +68,54 @@ const subscriptionBenefits = [
 
 export function SubscribeDialog({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) {
     const router = useRouter();
+    const { user, refreshUserData } = useAuth();
+    const { toast } = useToast();
     const [selectedPlan, setSelectedPlan] = useState('basic');
+    const [isSubscribing, setIsSubscribing] = useState(false);
+
 
     const handleLater = () => {
         onOpenChange(false);
-        // If coming from payment, redirect to track pickup
         if (localStorage.getItem('paymentCompleted')) {
              router.push('/track-pickup');
         }
     };
     
-    const handleSubscribe = () => {
-        onOpenChange(false);
-        // Logic for subscription payment
-        alert(`Berlangganan paket ${selectedPlan}`);
+    const handleSubscribe = async () => {
+        if (!user) {
+            toast({ variant: 'destructive', title: 'Error', description: 'You must be logged in to subscribe.' });
+            return;
+        }
+        setIsSubscribing(true);
+        try {
+            const userDocRef = doc(db, 'users', user.uid);
+            await updateDoc(userDocRef, {
+                subscription: {
+                    planId: selectedPlan,
+                    planName: subscriptionPlans.find(p => p.id === selectedPlan)?.name,
+                    status: 'active',
+                    subscribedAt: new Date()
+                }
+            });
+
+            await refreshUserData();
+
+            toast({
+                title: 'Berlangganan Berhasil!',
+                description: `Anda sekarang berlangganan paket ${subscriptionPlans.find(p => p.id === selectedPlan)?.name}.`
+            });
+            onOpenChange(false);
+            router.push('/schedule');
+        } catch (error) {
+            console.error("Subscription error: ", error);
+            toast({
+                variant: 'destructive',
+                title: 'Gagal Berlangganan',
+                description: 'Terjadi kesalahan. Silakan coba lagi.'
+            });
+        } finally {
+            setIsSubscribing(false);
+        }
     }
 
     const currentPlan = subscriptionPlans.find(p => p.id === selectedPlan);
@@ -166,16 +206,19 @@ export function SubscribeDialog({ open, onOpenChange }: { open: boolean, onOpenC
                                {currentPlan && currentPlan.price !== discountedPrice && (
                                  <p className="text-xs text-muted-foreground line-through">Rp{currentPlan.price.toLocaleString('id-ID')}</p>
                                )}
-                               <div className="text-xl font-bold text-primary flex items-center gap-2">
-                                Rp{discountedPrice.toLocaleString('id-ID')}
-                                {currentPlan && currentPlan.price !== discountedPrice && <Badge className="bg-green-200 text-green-800">-30%</Badge>}
-                               </div>
+                                <div className="text-xl font-bold text-primary flex items-center gap-2">
+                                 Rp{discountedPrice.toLocaleString('id-ID')}
+                                 {currentPlan && currentPlan.price !== discountedPrice && <Badge className="bg-green-200 text-green-800">-30%</Badge>}
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div className="grid grid-cols-2 gap-3">
-                        <Button variant="outline" size="lg" onClick={handleLater}>Nanti Saja</Button>
-                        <Button size="lg" onClick={handleSubscribe}>Berlangganan</Button>
+                        <Button variant="outline" size="lg" onClick={handleLater} disabled={isSubscribing}>Nanti Saja</Button>
+                        <Button size="lg" onClick={handleSubscribe} disabled={isSubscribing}>
+                            {isSubscribing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            Berlangganan
+                        </Button>
                     </div>
                  </footer>
             </DialogContent>
