@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { CheckCircle, MapPin, X } from 'lucide-react';
+import { CheckCircle, MapPin, X, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -99,7 +99,7 @@ export function SubscribeDialog({ open, onOpenChange }: { open: boolean, onOpenC
 
                     <RadioGroup value={selectedPlan} onValueChange={setSelectedPlan} className="space-y-3">
                         {subscriptionPlans.map(plan => (
-                            <Label key={plan.id} htmlFor={plan.id} className={`block p-3 rounded-lg border-2 cursor-pointer ${selectedPlan === plan.id ? 'border-primary bg-primary/5' : 'border-border bg-card'}`}>
+                            <Label key={plan.id} htmlFor={plan.id} className={`block p-4 rounded-lg border-2 cursor-pointer ${selectedPlan === plan.id ? 'border-primary bg-primary/5' : 'border-border bg-card'}`}>
                                 <div className="flex items-start">
                                     <RadioGroupItem value={plan.id} id={`dialog-${plan.id}`} className="mr-3 mt-1" />
                                     <div className="flex-grow">
@@ -111,6 +111,14 @@ export function SubscribeDialog({ open, onOpenChange }: { open: boolean, onOpenC
                                             <p className="font-bold text-md text-primary">
                                                 Rp{plan.price.toLocaleString('id-ID')}
                                             </p>
+                                        </div>
+                                        <div className="mt-3 space-y-2">
+                                            {plan.features.map((feature, index) => (
+                                                <div key={index} className="flex items-center gap-2 text-sm">
+                                                    <Check className="w-4 h-4 text-primary" />
+                                                    <span className="text-muted-foreground">{feature}</span>
+                                                </div>
+                                            ))}
                                         </div>
                                     </div>
                                 </div>
