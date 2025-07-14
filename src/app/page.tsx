@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -10,6 +11,8 @@ import {
   Award,
   History,
   ChevronRight,
+  Calendar,
+  Info,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -20,12 +23,13 @@ import React from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/context/auth-context';
 import { AppHeader } from '@/components/layout/app-header';
-
-type UserRole = 'user' | 'company' | 'admin' | 'courier' | null;
+import { useToast } from '@/hooks/use-toast';
 
 export default function Home() {
   const { user, userData, loading } = useAuth();
+  const { toast } = useToast();
   const isLoggedIn = !!user;
+  const isSubscribed = userData?.subscription?.status === 'active';
   
   let dashboardUrl = '/login';
   if (isLoggedIn && userData) {
@@ -53,15 +57,28 @@ export default function Home() {
     { icon: <Recycle className="w-8 h-8 text-primary" />, label: 'Recycle', href: isLoggedIn ? dashboardUrl : '/login' },
     { icon: <Smartphone className="w-8 h-8 text-primary" />, label: 'E-Waste', href: isLoggedIn ? dashboardUrl : '/login' },
   ];
-
-  const menuItems = [
-    { label: 'Status', href: isLoggedIn ? '/submission-status' : '/login' },
-    { label: 'Scheduling', href: isLoggedIn ? '/dashboard/points' : '/login' },
-    { label: 'About Us', href: '/about-us' },
-  ];
   
   const historyHref = isLoggedIn ? '/history' : '/login';
   const pointsHref = isLoggedIn ? '/dashboard/points' : '/login';
+  const scheduleHref = isLoggedIn ? (isSubscribed ? '/schedule' : '#') : '/login';
+
+  const menuItems = [
+    { label: 'Status', href: isLoggedIn ? '/submission-status' : '/login', icon: <History className="w-6 h-6 text-primary"/> },
+    { label: 'Scheduling', href: scheduleHref, icon: <Calendar className="w-6 h-6 text-primary"/>, requireSubscription: true },
+    { label: 'About Us', href: '/about-us', icon: <Info className="w-6 h-6 text-primary"/> },
+  ];
+
+  const handleMenuClick = (e: React.MouseEvent<HTMLAnchorElement>, requiresSubscription: boolean | undefined) => {
+    if (requiresSubscription && isLoggedIn && !isSubscribed) {
+      e.preventDefault();
+      toast({
+        variant: "destructive",
+        title: "Akses Ditolak",
+        description: "Anda harus berlangganan untuk mengakses fitur ini.",
+      });
+    }
+  };
+
 
   if (loading) {
     return (
@@ -140,8 +157,16 @@ export default function Home() {
 
             <div className="space-y-3">
                 {menuItems.map((item, index) => (
-                    <Link href={item.href} key={index} className="flex items-center justify-between bg-card text-card-foreground p-4 rounded-lg shadow-sm hover:bg-muted transition-colors">
-                        <span className="font-semibold text-lg">{item.label}</span>
+                    <Link 
+                      href={item.href} 
+                      key={index} 
+                      className="flex items-center justify-between bg-card text-card-foreground p-4 rounded-lg shadow-sm hover:bg-muted transition-colors"
+                      onClick={(e) => handleMenuClick(e, item.requireSubscription)}
+                    >
+                        <div className="flex items-center gap-4">
+                          {item.icon}
+                          <span className="font-semibold text-lg">{item.label}</span>
+                        </div>
                         <ChevronRight className="w-6 h-6 text-muted-foreground"/>
                     </Link>
                 ))}
