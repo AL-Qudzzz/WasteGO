@@ -31,24 +31,13 @@ const paymentMethods = [
 ]
 
 export default function PaymentPage() {
-    const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
     const router = useRouter();
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
         // Set payment status in localStorage upon successful payment
         localStorage.setItem('paymentCompleted', 'true');
-        setIsSuccessModalOpen(true);
-    };
-
-    const handleTrackPickup = () => {
-        setIsSuccessModalOpen(false);
-        router.push('/track-pickup');
-    };
-    
-    const handleViewDetails = () => {
-        setIsSuccessModalOpen(false);
-        router.push('/submission-status');
+        router.push('/subscribe');
     };
 
     return (
@@ -121,41 +110,6 @@ export default function PaymentPage() {
 
                 <Button onClick={handleSubmit} className="w-full h-12 text-lg mt-6">Bayar Sekarang</Button>
             </main>
-            <Dialog open={isSuccessModalOpen} onOpenChange={setIsSuccessModalOpen}>
-                <DialogContent className="sm:max-w-md p-6 rounded-lg">
-                    <div className="flex flex-col items-center text-center space-y-4">
-                         <div className="bg-primary text-primary-foreground rounded-full p-3">
-                            <CheckCircle className="h-12 w-12" />
-                        </div>
-                        <DialogHeader className="space-y-1 pb-2">
-                            <DialogTitle className="text-2xl font-bold text-foreground">Pembayaran Berhasil!</DialogTitle>
-                            <DialogDescription className="text-muted-foreground text-sm">
-                            Transaksi Anda telah berhasil diproses
-                            </DialogDescription>
-                        </DialogHeader>
-
-                        <Card className="w-full bg-green-50 border-green-200 shadow-sm">
-                            <CardContent className="p-4 text-center space-y-2">
-                                <div className="flex justify-center items-center gap-2">
-                                    <div className="bg-yellow-400 text-white p-1 rounded-full"><Star className="w-5 h-5 fill-current"/></div>
-                                    <h3 className="font-semibold text-lg">Selamat! Anda mendapatkan</h3>
-                                </div>
-                                <p className="text-4xl font-bold text-foreground">150 <span className="text-2xl">Poin</span></p>
-                                <p className="text-xs text-muted-foreground">Poin telah ditambahkan ke akun Anda</p>
-                            </CardContent>
-                        </Card>
-                        
-                        <div className="w-full space-y-2 pt-2">
-                            <Button className="w-full bg-primary hover:bg-primary/90" onClick={handleTrackPickup}>
-                                Lacak Penjemputan
-                            </Button>
-                             <Button variant="secondary" className="w-full" onClick={handleViewDetails}>
-                                Lihat detail pemesanan
-                            </Button>
-                        </div>
-                    </div>
-                </DialogContent>
-            </Dialog>
             <BottomNav />
         </div>
     );
