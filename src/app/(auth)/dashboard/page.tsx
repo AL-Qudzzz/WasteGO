@@ -23,7 +23,10 @@ function DashboardContent() {
     // Show subscribe popup only once after login
     const hasSeenPopup = sessionStorage.getItem('hasSeenSubscribePopup');
     if (!loading && userProfile && !hasSeenPopup) {
-      setShowSubscribe(true);
+      // Only show popup if user is NOT subscribed
+      if (userProfile.subscription?.status !== 'active') {
+          setShowSubscribe(true);
+      }
       sessionStorage.setItem('hasSeenSubscribePopup', 'true');
     }
      // Clear the flag on logout
@@ -53,6 +56,7 @@ function DashboardContent() {
   }
   
   const avatarFallback = (userProfile.fullName?.split(' ').map(n => n[0]).join('') || 'U').substring(0,2).toUpperCase();
+  const isSubscribed = userProfile.subscription?.status === 'active';
 
   return (
     <>
@@ -65,7 +69,7 @@ function DashboardContent() {
                     <CardTitle>Profil Pengguna</CardTitle>
                     <CardDescription>Kelola informasi profil dan pengaturan akun Anda.</CardDescription>
                 </div>
-                {userProfile.subscription?.status === 'active' && (
+                {isSubscribed && (
                     <Badge variant="secondary" className="bg-yellow-200 text-yellow-800 border-yellow-300">
                         <Star className="w-3.5 h-3.5 mr-1.5" />
                         Subscribed
@@ -111,6 +115,12 @@ function DashboardContent() {
             <CardTitle>Pengaturan Akun</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+             { !isSubscribed && (
+                <Button className="w-full justify-start bg-primary hover:bg-primary/90" onClick={() => setShowSubscribe(true)}>
+                    <Star className="mr-2 h-4 w-4" />
+                    <span>Berlangganan Sekarang</span>
+                </Button>
+              )}
              <Button variant="outline" className="w-full justify-start">
                <KeyRound className="mr-2 h-4 w-4"/>
                <span>Ubah Password</span>
