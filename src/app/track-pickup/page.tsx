@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -12,21 +13,28 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/auth-context';
 
 export default function TrackPickupPage() {
     const router = useRouter();
+    const { user, loading } = useAuth();
     const [isAllowed, setIsAllowed] = useState(false);
 
     useEffect(() => {
+        if (loading) {
+            return;
+        }
+
         const paymentCompleted = localStorage.getItem('paymentCompleted') === 'true';
-        if (!paymentCompleted) {
+        
+        if (!user || !paymentCompleted) {
             router.replace('/'); 
         } else {
             setIsAllowed(true);
         }
-    }, [router]);
+    }, [user, loading, router]);
 
-    if (!isAllowed) {
+    if (loading || !isAllowed) {
         return (
             <div className="flex flex-col min-h-screen bg-muted/20 text-foreground font-sans justify-center items-center">
                 <p>Mengarahkan...</p>
