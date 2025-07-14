@@ -11,13 +11,6 @@ import { Separator } from "@/components/ui/separator";
 import { BottomNav } from '@/components/layout/bottom-nav';
 import { AppHeader } from '@/components/layout/app-header';
 import { useState } from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { useRouter } from 'next/navigation';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 
@@ -37,6 +30,7 @@ export default function PaymentPage() {
         event.preventDefault();
         // Set payment status in localStorage upon successful payment
         localStorage.setItem('paymentCompleted', 'true');
+        // Redirect to subscribe page, which will now show as a modal/dialog
         router.push('/subscribe');
     };
 

@@ -3,14 +3,19 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { ArrowLeft, CheckCircle, MapPin, X } from 'lucide-react';
+import { CheckCircle, MapPin, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { BottomNav } from '@/components/layout/bottom-nav';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
 
 const subscriptionPlans = [
     {
@@ -54,126 +59,113 @@ const subscriptionBenefits = [
     { title: 'Reward Poin', description: 'Dapatkan poin setiap penyaluran untuk ditukar hadiah' }
 ];
 
-export default function SubscribePage() {
+export function SubscribeDialog({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) {
     const router = useRouter();
     const [selectedPlan, setSelectedPlan] = useState('basic');
-    
+
     const handleLater = () => {
-        router.push('/track-pickup');
+        onOpenChange(false);
+        // If coming from payment, redirect to track pickup
+        if (localStorage.getItem('paymentCompleted')) {
+             router.push('/track-pickup');
+        }
     };
+    
+    const handleSubscribe = () => {
+        onOpenChange(false);
+        // Logic for subscription payment
+        alert(`Berlangganan paket ${selectedPlan}`);
+    }
 
     const currentPlan = subscriptionPlans.find(p => p.id === selectedPlan);
     const discountedPrice = currentPlan ? currentPlan.price * 0.7 : 0;
-    
+
     return (
-        <div className="flex flex-col min-h-screen bg-muted/20">
-             <header className="p-4 flex justify-between items-center bg-background border-b sticky top-0 z-10">
-                <div className="flex items-center gap-1">
-                    <span className="text-3xl font-bold text-foreground">Waste</span>
-                    <span className="text-3xl font-bold text-primary flex items-center">GO</span>
-                </div>
-                 <Button variant="ghost" size="icon" asChild>
-                    <Link href="/"><X className="w-6 h-6"/></Link>
-                </Button>
-            </header>
-            <main className="flex-grow p-4 pb-32 overflow-y-auto">
-                <Button variant="ghost" className="mb-4 pl-0" onClick={() => router.back()}>
-                    <ArrowLeft className="w-4 h-4 mr-2" />
-                    Kembali
-                </Button>
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="max-w-md p-0 overflow-hidden">
+                <DialogHeader className="p-4 flex flex-row items-center justify-between border-b">
+                    <DialogTitle className="text-lg font-bold">Berlangganan WasteGO</DialogTitle>
+                </DialogHeader>
+                <div className="max-h-[80vh] overflow-y-auto p-4 space-y-4">
+                    <Card className="bg-green-50 border-green-200 text-green-800">
+                        <CardContent className="p-4">
+                            <Badge variant="secondary" className="bg-green-200 text-green-900 mb-2">PENAWARAN TERBATAS</Badge>
+                            <h3 className="font-bold text-lg">Diskon 30% untuk 3 bulan pertama!</h3>
+                            <p className="text-sm">Hemat lebih banyak dengan berlangganan sekarang</p>
+                        </CardContent>
+                    </Card>
 
-                 <div className="flex items-center gap-4 mb-4">
-                    <div className="bg-primary/20 p-3 rounded-full">
-                        <MapPin className="w-6 h-6 text-primary" />
-                    </div>
-                    <div>
-                        <h1 className="text-xl font-bold text-foreground">Berlangganan WasteGO</h1>
-                        <p className="text-sm text-muted-foreground">Nikmati layanan premium</p>
-                    </div>
-                </div>
+                    <h2 className="font-bold text-lg">Pilih Paket Berlangganan</h2>
 
-                <Card className="bg-green-50 border-green-200 text-green-800 mb-6">
-                    <CardContent className="p-4">
-                        <Badge variant="secondary" className="bg-green-200 text-green-900 mb-2">PENAWARAN TERBATAS</Badge>
-                        <h3 className="font-bold text-lg">Diskon 30% untuk 3 bulan pertama!</h3>
-                        <p className="text-sm">Hemat lebih banyak dengan berlangganan sekarang</p>
-                    </CardContent>
-                </Card>
-
-                <h2 className="font-bold text-lg mb-4">Pilih Paket Berlangganan</h2>
-
-                <RadioGroup value={selectedPlan} onValueChange={setSelectedPlan} className="space-y-4">
-                    {subscriptionPlans.map(plan => (
-                        <Label key={plan.id} htmlFor={plan.id} className={`block p-4 rounded-lg border-2 cursor-pointer ${selectedPlan === plan.id ? 'border-primary bg-primary/5' : 'border-border bg-card'}`}>
-                            <div className="flex items-start">
-                                <RadioGroupItem value={plan.id} id={plan.id} className="mr-4 mt-1" />
-                                <div className="flex-grow">
-                                    <div className="flex justify-between items-baseline">
-                                        <div>
-                                            <p className="font-bold">{plan.name}</p>
-                                            <p className="text-xs text-muted-foreground">{plan.period}</p>
+                    <RadioGroup value={selectedPlan} onValueChange={setSelectedPlan} className="space-y-3">
+                        {subscriptionPlans.map(plan => (
+                            <Label key={plan.id} htmlFor={plan.id} className={`block p-3 rounded-lg border-2 cursor-pointer ${selectedPlan === plan.id ? 'border-primary bg-primary/5' : 'border-border bg-card'}`}>
+                                <div className="flex items-start">
+                                    <RadioGroupItem value={plan.id} id={`dialog-${plan.id}`} className="mr-3 mt-1" />
+                                    <div className="flex-grow">
+                                        <div className="flex justify-between items-baseline">
+                                            <div>
+                                                <p className="font-bold">{plan.name}</p>
+                                                <p className="text-xs text-muted-foreground">{plan.period}</p>
+                                            </div>
+                                            <p className="font-bold text-md text-primary">
+                                                Rp{plan.price.toLocaleString('id-ID')}
+                                            </p>
                                         </div>
-                                        <p className="font-bold text-lg text-primary">
-                                            Rp{plan.price.toLocaleString('id-ID')}
-                                        </p>
                                     </div>
-                                    <ul className="mt-4 space-y-2 text-sm">
-                                        {plan.features.map(feature => (
-                                            <li key={feature} className="flex items-center gap-2">
-                                                <CheckCircle className="w-4 h-4 text-primary" />
-                                                <span className="text-muted-foreground">{feature}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
                                 </div>
-                            </div>
-                        </Label>
-                    ))}
-                </RadioGroup>
-
-                <Card className="mt-6">
-                    <CardHeader>
-                        <CardTitle>Keuntungan Berlangganan</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        {subscriptionBenefits.map(benefit => (
-                            <div key={benefit.title} className="flex items-start gap-3">
-                                <div className="flex-shrink-0 bg-primary/20 text-primary p-2 rounded-full">
-                                    <CheckCircle className="w-5 h-5" />
-                                </div>
-                                <div>
-                                    <h4 className="font-semibold">{benefit.title}</h4>
-                                    <p className="text-sm text-muted-foreground">{benefit.description}</p>
-                                </div>
-                            </div>
+                            </Label>
                         ))}
-                    </CardContent>
-                </Card>
-            </main>
+                    </RadioGroup>
 
-            <footer className="fixed bottom-0 left-0 right-0 bg-background border-t p-4 z-10 pb-24 md:pb-4">
-                 <div className="p-4 rounded-lg border bg-muted mb-4">
-                    <div className="flex justify-between items-center">
-                        <span className="text-lg font-bold">Total Pembayaran</span>
-                        <div className="text-right">
-                           {currentPlan && currentPlan.price !== discountedPrice && (
-                             <p className="text-sm text-muted-foreground line-through">Rp{currentPlan.price.toLocaleString('id-ID')}</p>
-                           )}
-                           <p className="text-2xl font-bold text-primary flex items-center gap-2">
-                            Rp{discountedPrice.toLocaleString('id-ID')}
-                            {currentPlan && currentPlan.price !== discountedPrice && <Badge className="bg-green-200 text-green-800">-30%</Badge>}
-                           </p>
+                     <Card>
+                        <CardHeader>
+                            <CardTitle className="text-base">Keuntungan Berlangganan</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
+                            {subscriptionBenefits.map(benefit => (
+                                <div key={benefit.title} className="flex items-start gap-3">
+                                    <div className="flex-shrink-0 bg-primary/20 text-primary p-2 rounded-full">
+                                        <CheckCircle className="w-4 h-4" />
+                                    </div>
+                                    <div>
+                                        <h4 className="font-semibold text-sm">{benefit.title}</h4>
+                                        <p className="text-xs text-muted-foreground">{benefit.description}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </CardContent>
+                    </Card>
+                </div>
+                 <footer className="bg-background border-t p-4 z-10">
+                     <div className="p-3 rounded-lg border bg-muted mb-3">
+                        <div className="flex justify-between items-center">
+                            <span className="text-md font-bold">Total</span>
+                            <div className="text-right">
+                               {currentPlan && currentPlan.price !== discountedPrice && (
+                                 <p className="text-xs text-muted-foreground line-through">Rp{currentPlan.price.toLocaleString('id-ID')}</p>
+                               )}
+                               <p className="text-xl font-bold text-primary flex items-center gap-2">
+                                Rp{discountedPrice.toLocaleString('id-ID')}
+                                {currentPlan && currentPlan.price !== discountedPrice && <Badge className="bg-green-200 text-green-800">-30%</Badge>}
+                               </p>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                    <Button variant="outline" size="lg" onClick={handleLater}>Nanti Saja</Button>
-                    <Button size="lg">Berlangganan</Button>
-                </div>
-                 <p className="text-xs text-center text-muted-foreground mt-3">Dengan berlangganan, Anda menyetujui Syarat & Ketentuan</p>
-            </footer>
-            <BottomNav />
-        </div>
+                    <div className="grid grid-cols-2 gap-3">
+                        <Button variant="outline" size="lg" onClick={handleLater}>Nanti Saja</Button>
+                        <Button size="lg" onClick={handleSubscribe}>Berlangganan</Button>
+                    </div>
+                 </footer>
+            </DialogContent>
+        </Dialog>
     );
+}
+
+
+// The full page is kept for the post-payment redirect flow.
+export default function SubscribePage() {
+    const [isDialogOpen, setIsDialogOpen] = useState(true);
+
+    return <SubscribeDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />;
 }
