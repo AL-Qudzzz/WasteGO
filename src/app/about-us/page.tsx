@@ -7,10 +7,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { BottomNav } from '@/components/layout/bottom-nav';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { AppHeader } from '@/components/layout/app-header';
+import Image from 'next/image';
 
 const teamMembers = [
-    { name: 'Syifa Najwa Azzahra', role: 'CEO & Founder', imageHint: 'female ceo' },
-    { name: 'Muhammad Faiqul', role: 'CTO & Co-Founder', imageHint: 'male cto' },
+    { name: 'Syifa Najwa Azzahra', role: 'CEO & Founder', imageUrl: 'https://i.imgur.com/O17Mwds.jpeg' },
+    { name: 'Muhammad Faiqul', role: 'CTO & Co-Founder', imageUrl: 'https://placehold.co/100x100.png', imageHint: 'male cto' },
 ];
 
 export default function AboutUsPage() {
@@ -84,7 +85,7 @@ export default function AboutUsPage() {
                             {teamMembers.map((member, index) => (
                                 <div key={index} className="flex flex-col items-center text-center">
                                     <Avatar className="w-24 h-24 mb-3 border-2 border-primary">
-                                        <AvatarImage src={`https://placehold.co/100x100.png`} data-ai-hint={member.imageHint} />
+                                        <AvatarImage src={member.imageUrl} data-ai-hint={member.imageHint} alt={member.name} />
                                         <AvatarFallback>{member.name.substring(0,2).toUpperCase()}</AvatarFallback>
                                     </Avatar>
                                     <h4 className="font-semibold text-foreground">{member.name}</h4>
