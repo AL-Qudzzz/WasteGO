@@ -3,6 +3,8 @@
 
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import { LatLngExpression, Icon } from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+
 
 const courierPosition: LatLngExpression = [-6.229728, 106.827148]; // Courier somewhere in Jakarta
 const destinationPosition: LatLngExpression = [-6.208763, 106.845599]; // Destination somewhere in Jakarta
