@@ -1,10 +1,6 @@
 
 'use client';
 
-import 'leaflet/dist/leaflet.css';
-import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css';
-import 'leaflet-defaulticon-compatibility';
-
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import { LatLngExpression, Icon } from 'leaflet';
 
