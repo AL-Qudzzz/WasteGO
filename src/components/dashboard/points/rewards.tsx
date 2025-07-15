@@ -12,28 +12,28 @@ const availableRewards = [
         title: "Voucher Belanja Indomaret",
         value: "Rp. 100.000",
         points: 10000,
-        imageUrl: "https://placehold.co/150x80.png",
+        imageUrl: "https://i.imgur.com/7O5Dg7V.jpeg",
         imageHint: "indomaret logo"
     },
     {
         title: "Voucher Belanja Superindo",
         value: "Rp. 90.000",
         points: 9000,
-        imageUrl: "https://placehold.co/150x80.png",
+        imageUrl: "https://i.imgur.com/yr63o8h.jpeg",
         imageHint: "superindo logo"
     },
     {
         title: "Voucher Belanja Alfamidi",
         value: "Rp. 100.000",
         points: 10000,
-        imageUrl: "https://placehold.co/150x80.png",
+        imageUrl: "https://i.imgur.com/g8OTnhV.jpeg",
         imageHint: "alfamidi logo"
     },
     {
         title: "Voucher Belanja Tokopedia",
         value: "Rp. 80.000",
         points: 8000,
-        imageUrl: "https://placehold.co/150x80.png",
+        imageUrl: "https://i.imgur.com/cQ8wQCr.jpeg",
         imageHint: "tokopedia logo"
     },
 ];
