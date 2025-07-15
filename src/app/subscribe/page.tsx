@@ -155,7 +155,7 @@ export function SubscribeDialog({ open, onOpenChange }: { open: boolean, onOpenC
                         {subscriptionPlans.map(plan => (
                             <Label key={plan.id} htmlFor={plan.id} className={`block p-4 rounded-lg border-2 cursor-pointer ${selectedPlan === plan.id ? 'border-primary bg-primary/5' : 'border-border bg-card'}`}>
                                 <div className="flex items-start">
-                                    <RadioGroupItem value={plan.id} id={`dialog-${plan.id}`} className="mr-3 mt-1" />
+                                    <RadioGroupItem value={plan.id} id={plan.id} className="mr-3 mt-1" />
                                     <div className="flex-grow">
                                         <div className="flex justify-between items-baseline">
                                             <div>
