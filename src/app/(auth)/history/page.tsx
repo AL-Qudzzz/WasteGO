@@ -87,9 +87,6 @@ export default function HistoryPage() {
                                 </div>
                                 <span className="font-medium text-foreground">{pickup.courier}</span>
                             </div>
-                            <Button variant="outline" className="w-full mt-2">
-                                Lihat Detail
-                            </Button>
                         </CardContent>
                     </Card>
                 ))}
