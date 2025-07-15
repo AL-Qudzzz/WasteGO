@@ -8,8 +8,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { AppHeader } from '@/components/layout/app-header';
 
 const teamMembers = [
-    { name: 'Andi Wijaya', role: 'CEO & Founder', imageHint: 'male ceo' },
-    { name: 'Bunga Lestari', role: 'CTO & Co-Founder', imageHint: 'female cto' },
+    { name: 'Syifa Najwa Azzahra', role: 'CEO & Founder', imageHint: 'female ceo' },
+    { name: 'Muhammad Faiqul', role: 'CTO & Co-Founder', imageHint: 'male cto' },
     { name: 'Cahyo Wibowo', role: 'COO', imageHint: 'male coo' },
 ];
 
