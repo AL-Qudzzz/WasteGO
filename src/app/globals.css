@@ -92,3 +92,7 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.leaflet-container {
+    border-radius: 0.5rem;
+}

@@ -11,14 +11,21 @@ import { AppHeader } from '@/components/layout/app-header';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/auth-context';
+import dynamic from 'next/dynamic';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function TrackPickupPage() {
     const router = useRouter();
     const { user, loading } = useAuth();
     const [isAllowed, setIsAllowed] = useState(false);
+
+    const Map = useMemo(() => dynamic(() => import('@/components/maps/tracking-map'), { 
+      loading: () => <Skeleton className="h-64 w-full rounded-lg" />,
+      ssr: false 
+    }), [])
 
     useEffect(() => {
         if (loading) {
@@ -57,7 +64,7 @@ export default function TrackPickupPage() {
 
                 <Card className="mb-6 shadow-md rounded-lg overflow-hidden">
                     <div className="relative h-64 w-full">
-                        <Image src="https://i.imgur.com/3Z6gJ8N.png" alt="Peta Lokasi Kurir" layout="fill" objectFit="cover" data-ai-hint="map route" />
+                        <Map />
                     </div>
                     <CardContent className="p-4 bg-background">
                         <div className="flex justify-between items-center text-sm">
