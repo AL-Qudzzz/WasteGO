@@ -55,7 +55,7 @@ export default function Home() {
     { icon: <Trash2 className="w-8 h-8 text-primary" />, label: 'Food Waste', href: isLoggedIn ? '/food-waste' : '/login' },
     { icon: <HeartPulse className="w-8 h-8 text-primary" />, label: 'Medic Waste', href: isLoggedIn ? '/medic-waste' : '/login' },
     { icon: <Recycle className="w-8 h-8 text-primary" />, label: 'Recycle', href: isLoggedIn ? dashboardUrl : '/login' },
-    { icon: <Smartphone className="w-8 h-8 text-primary" />, label: 'E-Waste', href: isLoggedIn ? dashboardUrl : '/login' },
+    { icon: <Smartphone className="w-8 h-8 text-primary" />, label: 'E-Waste', href: isLoggedIn ? '/e-waste' : '/login' },
   ];
   
   const historyHref = isLoggedIn ? '/history' : '/login';
