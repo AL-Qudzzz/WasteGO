@@ -48,7 +48,6 @@ export default function RecyclePage() {
             description: "Limbah dari sisa kemasan dan botol plastik yang bila dipilah berdasarkan jenisnya dapat di daur ulang menjadi barang berguna.",
             imageUrl: "https://placehold.co/360x164.png",
             imageHint: "plastic bottles",
-            info: "Limbah plastik akan kami salurkan ke mitra daur ulang kami. Harap pastikan limbah dalam keadaan bersih dan kering.",
             href: `/disposal-form?title=Plastic Waste&info=${encodeURIComponent("Limbah plastik akan kami salurkan ke mitra daur ulang kami. Harap pastikan limbah dalam keadaan bersih dan kering.")}&backUrl=/recycle`
         },
         {
@@ -56,7 +55,6 @@ export default function RecyclePage() {
             description: "Semua jenis limbah kardus dan kemasan kertas yang bisa menjadi produk daur ulang bernilai jika dipilah dan dikumpulkan.",
             imageUrl: "https://placehold.co/360x164.png",
             imageHint: "cardboard boxes",
-            info: "Limbah kardus dan kertas akan kami salurkan ke mitra daur ulang kami. Pastikan limbah tidak basah atau terkontaminasi minyak.",
             href: `/disposal-form?title=Cardboard Waste&info=${encodeURIComponent("Limbah kardus dan kertas akan kami salurkan ke mitra daur ulang kami. Pastikan limbah tidak basah atau terkontaminasi minyak.")}&backUrl=/recycle`
         }
     ];
