@@ -11,7 +11,7 @@ import Image from 'next/image';
 
 const teamMembers = [
     { name: 'Syifa Najwa Azzahra', role: 'CEO & Founder', imageUrl: 'https://i.imgur.com/O17Mwds.jpeg' },
-    { name: 'Muhammad Faiqul', role: 'CTO & Co-Founder', imageUrl: 'https://placehold.co/100x100.png', imageHint: 'male cto' },
+    { name: 'Muhammad Faiqul', role: 'CTO & Co-Founder', imageUrl: 'https://i.imgur.com/cFesnec.jpeg', imageHint: 'male cto' },
 ];
 
 export default function AboutUsPage() {
