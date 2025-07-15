@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -57,6 +58,7 @@ export function SignupForm() {
         address,
         postalCode,
         role: 'user', // default role
+        points: 0, // Initialize points
         createdAt: new Date(),
       });
       

@@ -5,12 +5,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PointsSummary } from "@/components/dashboard/points/summary";
 import { PointsHistory } from "@/components/dashboard/points/history";
 import { PointsRewards } from "@/components/dashboard/points/rewards";
-import { ArrowLeft, Coins } from "lucide-react";
+import { ArrowLeft, Coins, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { useAuth } from "@/context/auth-context";
 
 
 export default function UserPointsPage() {
+  const { userData, loading } = useAuth();
+  
   return (
     <div className="space-y-6">
       <Link href="/" className="flex items-center gap-2 mb-2 text-sm text-foreground font-medium">
@@ -30,7 +33,13 @@ export default function UserPointsPage() {
               </div>
           </CardHeader>
           <CardContent>
-              <p className="text-4xl font-bold">2.450</p>
+              {loading ? (
+                <Loader2 className="w-8 h-8 animate-spin" />
+              ) : (
+                <p className="text-4xl font-bold">
+                  {(userData?.points || 0).toLocaleString('id-ID')}
+                </p>
+              )}
               <p className="text-sm text-primary-foreground/80 mt-1">Poin dapat ditukar dengan berbagai hadiah</p>
           </CardContent>
       </Card>

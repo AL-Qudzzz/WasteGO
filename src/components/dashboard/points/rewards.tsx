@@ -1,11 +1,15 @@
 
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import Image from "next/image";
+import { useAuth } from "@/context/auth-context";
+import { doc, updateDoc, increment } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { Loader2 } from "lucide-react";
 
 const availableRewards = [
     {
@@ -40,14 +44,41 @@ const availableRewards = [
 
 export function PointsRewards() {
     const { toast } = useToast();
+    const { user, userData, refreshUserData } = useAuth();
+    const [redeeming, setRedeeming] = useState<number | null>(null);
 
-    const handleRedeem = (points: number, title: string) => {
-        // Here you would add logic to check if user has enough points
-        // and deduct points from their account.
-        toast({
-            title: "Voucher Berhasil Ditukar!",
-            description: `Anda telah berhasil menukar ${points} poin dengan ${title}.`,
-        });
+    const handleRedeem = async (points: number, title: string, index: number) => {
+        if (!user || !userData) {
+            toast({ variant: 'destructive', title: 'Error', description: 'Anda harus login untuk menukar poin.' });
+            return;
+        }
+
+        if ((userData.points || 0) < points) {
+            toast({ variant: 'destructive', title: 'Poin Tidak Cukup', description: 'Poin Anda tidak cukup untuk menukar hadiah ini.' });
+            return;
+        }
+
+        setRedeeming(index);
+        try {
+            const userDocRef = doc(db, 'users', user.uid);
+            await updateDoc(userDocRef, {
+                points: increment(-points)
+            });
+            await refreshUserData();
+            toast({
+                title: "Voucher Berhasil Ditukar!",
+                description: `Anda telah berhasil menukar ${points} poin dengan ${title}.`,
+            });
+        } catch (error) {
+            console.error("Redeem error:", error);
+            toast({
+                variant: 'destructive',
+                title: 'Gagal Menukar',
+                description: 'Terjadi kesalahan. Silakan coba lagi.'
+            });
+        } finally {
+            setRedeeming(null);
+        }
     };
 
     return (
@@ -74,9 +105,10 @@ export function PointsRewards() {
                         <CardFooter className="p-2">
                              <Button
                                 className="w-full"
-                                onClick={() => handleRedeem(reward.points, reward.title)}
+                                onClick={() => handleRedeem(reward.points, reward.title, index)}
+                                disabled={redeeming === index || ((userData?.points || 0) < reward.points)}
                              >
-                                Tukar
+                                {redeeming === index ? <Loader2 className="h-4 w-4 animate-spin" /> : `Tukar (-${reward.points})`}
                             </Button>
                         </CardFooter>
                     </Card>

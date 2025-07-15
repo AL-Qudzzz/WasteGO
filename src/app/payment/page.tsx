@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowLeft, CheckCircle, QrCode, Landmark, Wallet, Truck, Coins, Info, Star, X } from 'lucide-react';
+import { ArrowLeft, CheckCircle, QrCode, Landmark, Wallet, Truck, Coins, Info, Star, X, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -22,6 +22,10 @@ import {
   DialogDescription,
   DialogClose,
 } from '@/components/ui/dialog';
+import { useAuth } from '@/context/auth-context';
+import { doc, updateDoc, increment } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { useToast } from '@/hooks/use-toast';
 
 
 const paymentMethods = [
@@ -32,14 +36,46 @@ const paymentMethods = [
     { id: 'poin', label: 'Poin', description: 'Tukar dengan Poin Reward kamu', icon: <Coins className="w-6 h-6 text-foreground" /> },
 ]
 
+const POINTS_EARNED = 150;
+
 export default function PaymentPage() {
     const router = useRouter();
+    const { user, refreshUserData } = useAuth();
+    const { toast } = useToast();
     const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+    const [isProcessing, setIsProcessing] = useState(false);
 
-    const handleSubmit = (event: React.FormEvent) => {
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        localStorage.setItem('paymentCompleted', 'true');
-        setIsSuccessModalOpen(true);
+        if (!user) {
+            toast({
+                variant: 'destructive',
+                title: 'Error',
+                description: 'You must be logged in to make a payment.',
+            });
+            return;
+        }
+
+        setIsProcessing(true);
+        try {
+            const userDocRef = doc(db, 'users', user.uid);
+            await updateDoc(userDocRef, {
+                points: increment(POINTS_EARNED),
+            });
+
+            await refreshUserData();
+            localStorage.setItem('paymentCompleted', 'true');
+            setIsSuccessModalOpen(true);
+        } catch (error) {
+            console.error("Payment error:", error);
+            toast({
+                variant: 'destructive',
+                title: 'Payment Failed',
+                description: 'Could not process your payment. Please try again.',
+            });
+        } finally {
+            setIsProcessing(false);
+        }
     };
 
     const handleTrackPickup = () => {
@@ -120,7 +156,10 @@ export default function PaymentPage() {
                     </AlertDescription>
                 </Alert>
 
-                <Button onClick={handleSubmit} className="w-full h-12 text-lg mt-6">Bayar Sekarang</Button>
+                <Button onClick={handleSubmit} className="w-full h-12 text-lg mt-6" disabled={isProcessing}>
+                    {isProcessing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Bayar Sekarang
+                </Button>
             </main>
 
             <Dialog open={isSuccessModalOpen} onOpenChange={setIsSuccessModalOpen}>
@@ -147,7 +186,7 @@ export default function PaymentPage() {
                                         <p className="text-sm">Anda mendapatkan</p>
                                     </div>
                                 </div>
-                                <p className="text-3xl font-bold">150 <span className="text-xl">Poin</span></p>
+                                <p className="text-3xl font-bold">{POINTS_EARNED} <span className="text-xl">Poin</span></p>
                                 <p className="text-xs text-muted-foreground">Poin telah ditambahkan ke akun Anda</p>
                             </CardContent>
                         </Card>

@@ -3,7 +3,7 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { onAuthStateChanged, signOut, User as FirebaseUser } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
 import { useRouter } from 'next/navigation';
 
@@ -13,6 +13,7 @@ interface UserData {
   uid: string;
   email: string | null;
   role: UserRole;
+  points?: number;
   [key: string]: any;
 }
 
@@ -43,9 +44,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const userDocSnap = await getDoc(userDocRef);
         if (userDocSnap.exists()) {
           const data = userDocSnap.data();
+          if (data.points === undefined) {
+             // Initialize points if not present
+            await setDoc(userDocRef, { points: 0 }, { merge: true });
+            data.points = 0;
+          }
           setUserData({ uid: currentUser.uid, email: currentUser.email, role: data.role || 'user', ...data });
         } else {
-           setUserData({ uid: currentUser.uid, email: currentUser.email, role: 'user' });
+           setUserData({ uid: currentUser.uid, email: currentUser.email, role: 'user', points: 0 });
         }
       }
     } else {
@@ -67,7 +73,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if(auth.currentUser){
           setLoading(true);
           await fetchUserData(auth.currentUser);
-          setLoading(false);
       }
   }
 
