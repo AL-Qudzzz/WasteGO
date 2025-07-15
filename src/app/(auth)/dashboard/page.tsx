@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Suspense, useState, useEffect } from 'react';
@@ -8,16 +9,25 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { User, Mail, Phone, MapPin, KeyRound, LogOut, Star } from "lucide-react";
+import { User, Mail, Phone, MapPin, KeyRound, LogOut, Star, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/context/auth-context';
 import { SubscribeDialog } from '@/app/subscribe/page';
 import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 function DashboardContent() {
-  const { userData: userProfile, loading, logout } = useAuth();
+  const { user, userData: userProfile, loading, logout, refreshUserData } = useAuth();
+  const { toast } = useToast();
   const [showSubscribe, setShowSubscribe] = useState(false);
+  
+  const [fullName, setFullName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     // Show subscribe popup only once after login
@@ -36,6 +46,49 @@ function DashboardContent() {
         }
      }
   }, [loading, userProfile]);
+  
+  useEffect(() => {
+    if (userProfile) {
+        setFullName(userProfile.fullName || '');
+        setPhone(userProfile.phone || '');
+        setAddress(userProfile.address || '');
+    }
+  }, [userProfile]);
+
+  const handleSaveChanges = async () => {
+    if (!user) {
+        toast({
+            variant: "destructive",
+            title: "Error",
+            description: "You must be logged in to save changes.",
+        });
+        return;
+    }
+    
+    setIsSaving(true);
+    try {
+        const userDocRef = doc(db, "users", user.uid);
+        await updateDoc(userDocRef, {
+            fullName,
+            phone,
+            address,
+        });
+        await refreshUserData();
+        toast({
+            title: "Success",
+            description: "Profile updated successfully.",
+        });
+    } catch (error) {
+       console.error("Error updating profile: ", error);
+       toast({
+            variant: "destructive",
+            title: "Update Failed",
+            description: "Could not update profile. Please try again.",
+        });
+    } finally {
+        setIsSaving(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -89,24 +142,27 @@ function DashboardContent() {
             <form className="space-y-4">
               <div>
                 <Label htmlFor="fullName" className="flex items-center gap-2 mb-1"><User className="h-4 w-4 text-muted-foreground" /> Nama Lengkap</Label>
-                <Input id="fullName" defaultValue={userProfile.fullName} />
+                <Input id="fullName" value={fullName} onChange={(e) => setFullName(e.target.value)} disabled={isSaving} />
               </div>
               <div>
                 <Label htmlFor="email" className="flex items-center gap-2 mb-1"><Mail className="h-4 w-4 text-muted-foreground" /> Email</Label>
-                <Input id="email" type="email" defaultValue={userProfile.email} disabled />
+                <Input id="email" type="email" value={userProfile.email} disabled />
               </div>
               <div>
                 <Label htmlFor="phone" className="flex items-center gap-2 mb-1"><Phone className="h-4 w-4 text-muted-foreground" /> Nomor Telepon</Label>
-                <Input id="phone" type="tel" defaultValue={userProfile.phone} />
+                <Input id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} disabled={isSaving} />
               </div>
               <div>
                 <Label htmlFor="address" className="flex items-center gap-2 mb-1"><MapPin className="h-4 w-4 text-muted-foreground" /> Alamat</Label>
-                <Input id="address" defaultValue={userProfile.address} />
+                <Input id="address" value={address} onChange={(e) => setAddress(e.target.value)} disabled={isSaving} />
               </div>
             </form>
           </CardContent>
           <CardFooter>
-            <Button className="w-full">Simpan Perubahan</Button>
+            <Button className="w-full" onClick={handleSaveChanges} disabled={isSaving}>
+                {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Simpan Perubahan
+            </Button>
           </CardFooter>
         </Card>
 
