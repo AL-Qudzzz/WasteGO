@@ -1,31 +1,40 @@
 
 "use client";
 
-import * as React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React from "react";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { ShoppingBag, Star, Ticket } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import Image from "next/image";
 
 const availableRewards = [
     {
-        icon: <ShoppingBag className="w-6 h-6 text-primary-foreground" />,
-        title: "Voucher Diskon Toko A",
-        description: "Diskon Rp 25.000 untuk semua produk",
-        points: 500
+        title: "Voucher Belanja Indomaret",
+        value: "Rp. 100.000",
+        points: 10000,
+        imageUrl: "https://placehold.co/150x80.png",
+        imageHint: "indomaret logo"
     },
     {
-        icon: <Ticket className="w-6 h-6 text-primary-foreground" />,
-        title: "Voucher Nonton Bioskop",
-        description: "1 Tiket nonton gratis di XXI",
-        points: 750
+        title: "Voucher Belanja Superindo",
+        value: "Rp. 90.000",
+        points: 9000,
+        imageUrl: "https://placehold.co/150x80.png",
+        imageHint: "superindo logo"
     },
     {
-        icon: <ShoppingBag className="w-6 h-6 text-primary-foreground" />,
-        title: "Voucher Belanja Supermarket B",
-        description: "Potongan harga Rp 50.000",
-        points: 1000
+        title: "Voucher Belanja Alfamidi",
+        value: "Rp. 100.000",
+        points: 10000,
+        imageUrl: "https://placehold.co/150x80.png",
+        imageHint: "alfamidi logo"
+    },
+    {
+        title: "Voucher Belanja Tokopedia",
+        value: "Rp. 80.000",
+        points: 8000,
+        imageUrl: "https://placehold.co/150x80.png",
+        imageHint: "tokopedia logo"
     },
 ];
 
@@ -42,35 +51,37 @@ export function PointsRewards() {
     };
 
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle>Tukarkan Poin Anda</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <div className="space-y-4">
-                    {availableRewards.map((reward, index) => (
-                        <React.Fragment key={index}>
-                            <div className="flex items-center gap-4">
-                                <div className="bg-primary p-3 rounded-lg">
-                                    {reward.icon}
-                                </div>
-                                <div className="flex-grow">
-                                    <h4 className="font-semibold text-foreground">{reward.title}</h4>
-                                    <p className="text-sm text-muted-foreground">{reward.description}</p>
-                                    <div className="flex items-center gap-1 mt-1">
-                                        <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                                        <span className="font-bold text-sm text-primary">{reward.points} Poin</span>
-                                    </div>
-                                </div>
-                                <Button size="sm" onClick={() => handleRedeem(reward.points, reward.title)}>
-                                    Tukar
-                                </Button>
+        <div className="space-y-4">
+            <h3 className="text-lg font-bold text-foreground">Tukar Poin</h3>
+            <div className="grid grid-cols-2 gap-4">
+                {availableRewards.map((reward, index) => (
+                    <Card key={index} className="flex flex-col text-center shadow-md">
+                        <CardHeader className="p-4 items-center">
+                            <div className="relative w-24 h-12">
+                                <Image
+                                    src={reward.imageUrl}
+                                    alt={reward.title}
+                                    layout="fill"
+                                    objectFit="contain"
+                                    data-ai-hint={reward.imageHint}
+                                />
                             </div>
-                            {index < availableRewards.length - 1 && <Separator />}
-                        </React.Fragment>
-                    ))}
-                </div>
-            </CardContent>
-        </Card>
+                        </CardHeader>
+                        <CardContent className="p-4 pt-0 flex-grow">
+                            <CardDescription className="text-foreground font-medium text-sm">{reward.title}</CardDescription>
+                            <p className="font-bold text-primary mt-1">{reward.value}</p>
+                        </CardContent>
+                        <CardFooter className="p-2">
+                             <Button
+                                className="w-full"
+                                onClick={() => handleRedeem(reward.points, reward.title)}
+                             >
+                                Tukar
+                            </Button>
+                        </CardFooter>
+                    </Card>
+                ))}
+            </div>
+        </div>
     )
 }
