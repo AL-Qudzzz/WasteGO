@@ -4,7 +4,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/auth-context';
-import { Calendar, ArrowLeft, CheckCircle, Info } from 'lucide-react';
+import { Calendar, ArrowLeft, CheckCircle, Info, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,8 @@ import { Calendar as UICalendar } from '@/components/ui/calendar';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { addDays, format } from 'date-fns';
+import { doc, updateDoc, Timestamp } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 const scheduleOptions: { [key: string]: { label: string; pickups: number; period: 'week' | 'month' } } = {
     basic: { label: '1x per Minggu', pickups: 1, period: 'week' },
@@ -22,9 +24,10 @@ const scheduleOptions: { [key: string]: { label: string; pickups: number; period
 
 export default function SchedulePage() {
     const router = useRouter();
-    const { user, userData, loading } = useAuth();
+    const { user, userData, loading, refreshUserData } = useAuth();
     const { toast } = useToast();
     const [selectedDates, setSelectedDates] = useState<Date[]>([]);
+    const [isSaving, setIsSaving] = useState(false);
     
     const subscription = userData?.subscription;
     const planId = subscription?.planId;
@@ -41,28 +44,38 @@ export default function SchedulePage() {
         }
     }, [user, loading, subscription, router, toast]);
 
+    useEffect(() => {
+        if (userData?.schedule) {
+            const savedDates = userData.schedule.map((timestamp: any) => timestamp.toDate());
+            setSelectedDates(savedDates);
+        }
+    }, [userData]);
+
     if (loading || !planDetails) {
         return <div className="flex justify-center items-center h-screen">Loading...</div>;
     }
 
-    const handleDayClick = (day: Date) => {
-        setSelectedDates(prev => {
-            if (prev.some(d => d.getTime() === day.getTime())) {
-                return prev.filter(d => d.getTime() !== day.getTime());
+    const handleDayClick = (day: Date, { selected }: { selected: boolean }) => {
+        if (selected) {
+            setSelectedDates(prev => prev.filter(d => d.getTime() !== day.getTime()));
+        } else {
+            if (selectedDates.length < planDetails.pickups) {
+                setSelectedDates(prev => [...prev, day]);
+            } else {
+                toast({
+                    variant: 'destructive',
+                    title: 'Batas Penjadwalan Tercapai',
+                    description: `Anda hanya dapat memilih ${planDetails.pickups} hari. Hapus pilihan lain untuk memilih tanggal ini.`,
+                });
             }
-            if (prev.length < planDetails.pickups) {
-                return [...prev, day];
-            }
-            toast({
-                variant: 'destructive',
-                title: 'Batas Penjadwalan Tercapai',
-                description: `Anda hanya dapat memilih ${planDetails.pickups} hari.`,
-            });
-            return prev;
-        });
+        }
     };
 
-    const handleSaveSchedule = () => {
+    const handleSaveSchedule = async () => {
+        if (!user) {
+            toast({ variant: 'destructive', title: 'Error', description: 'Anda harus login.' });
+            return;
+        }
         if (selectedDates.length !== planDetails.pickups) {
             toast({
                 variant: 'destructive',
@@ -72,12 +85,29 @@ export default function SchedulePage() {
             return;
         }
 
-        console.log('Jadwal disimpan:', selectedDates);
-        toast({
-            title: 'Jadwal Berhasil Disimpan!',
-            description: 'Penjemputan Anda telah dikonfirmasi.',
-        });
-        router.push('/');
+        setIsSaving(true);
+        try {
+            const userDocRef = doc(db, 'users', user.uid);
+            const datesAsTimestamps = selectedDates.map(date => Timestamp.fromDate(date));
+            await updateDoc(userDocRef, {
+                schedule: datesAsTimestamps,
+            });
+            await refreshUserData();
+            toast({
+                title: 'Jadwal Berhasil Disimpan!',
+                description: 'Penjemputan Anda telah dikonfirmasi.',
+            });
+             router.push('/dashboard');
+        } catch (error) {
+            console.error('Error saving schedule:', error);
+            toast({
+                variant: 'destructive',
+                title: 'Gagal Menyimpan Jadwal',
+                description: 'Terjadi kesalahan. Silakan coba lagi.',
+            });
+        } finally {
+            setIsSaving(false);
+        }
     };
     
     const today = new Date();
@@ -107,10 +137,9 @@ export default function SchedulePage() {
                         <div className="flex-grow flex justify-center">
                             <UICalendar
                                 mode="multiple"
-                                min={planDetails.pickups}
+                                min={0} 
                                 max={planDetails.pickups}
                                 selected={selectedDates}
-                                onSelect={(dates) => setSelectedDates(dates || [])}
                                 onDayClick={handleDayClick}
                                 disabled={{ before: today }}
                                 className="rounded-md border"
@@ -146,8 +175,9 @@ export default function SchedulePage() {
             <Button
                 className="w-full"
                 onClick={handleSaveSchedule}
-                disabled={selectedDates.length !== planDetails.pickups}
+                disabled={isSaving || selectedDates.length !== planDetails.pickups}
             >
+                {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Simpan Jadwal ({selectedDates.length}/{planDetails.pickups})
             </Button>
         </div>
