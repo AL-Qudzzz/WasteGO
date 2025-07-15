@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -10,7 +11,6 @@ import { AppHeader } from '@/components/layout/app-header';
 const teamMembers = [
     { name: 'Syifa Najwa Azzahra', role: 'CEO & Founder', imageHint: 'female ceo' },
     { name: 'Muhammad Faiqul', role: 'CTO & Co-Founder', imageHint: 'male cto' },
-    { name: 'Cahyo Wibowo', role: 'COO', imageHint: 'male coo' },
 ];
 
 export default function AboutUsPage() {
@@ -80,7 +80,7 @@ export default function AboutUsPage() {
                             </CardTitle>
                             <CardDescription>Orang-orang hebat di balik WasteGo.</CardDescription>
                         </CardHeader>
-                        <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                        <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4">
                             {teamMembers.map((member, index) => (
                                 <div key={index} className="flex flex-col items-center text-center">
                                     <Avatar className="w-24 h-24 mb-3 border-2 border-primary">
