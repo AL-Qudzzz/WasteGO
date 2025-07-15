@@ -47,13 +47,17 @@ export default function EWastePage() {
             title: "Heavy E-Waste",
             description: "Perangkat besar dan kompleks yang sulit dibongkar, mengandung logam berat atau komponen berbahaya. Harus disalurkan ke e-waste collector resmi.",
             imageUrl: "https://placehold.co/360x164.png",
-            imageHint: "office electronics"
+            imageHint: "office electronics",
+            info: "Limbah elektronik berat seperti kulkas atau mesin cuci akan dijemput dengan armada khusus. Pastikan akses ke lokasi mudah.",
+            href: `/disposal-form?title=Heavy E-Waste&info=${encodeURIComponent("Limbah elektronik berat seperti kulkas atau mesin cuci akan dijemput dengan armada khusus. Pastikan akses ke lokasi mudah.")}&backUrl=/e-waste`
         },
         {
             title: "Light E-Waste",
             description: "Barang elektronik kecil dari rumah tangga yang sudah tidak dipakai. Umumnya dapat dikumpulkan komunitas daur ulang.",
             imageUrl: "https://placehold.co/360x164.png",
-            imageHint: "remote controls"
+            imageHint: "remote controls",
+            info: "Limbah elektronik ringan seperti ponsel, remote, atau kabel akan kami salurkan ke mitra daur ulang e-waste kami.",
+            href: `/disposal-form?title=Light E-Waste&info=${encodeURIComponent("Limbah elektronik ringan seperti ponsel, remote, atau kabel akan kami salurkan ke mitra daur ulang e-waste kami.")}&backUrl=/e-waste`
         }
     ];
 
@@ -90,7 +94,9 @@ export default function EWastePage() {
                                         <p className="text-center text-sm text-muted-foreground flex-grow">
                                            {waste.description}
                                         </p>
-                                        <Button className="w-full mt-auto">Salurkan</Button>
+                                        <Button asChild className="w-full mt-auto">
+                                            <Link href={waste.href}>Salurkan</Link>
+                                        </Button>
                                     </CardContent>
                                 </Card>
                             </CarouselItem>

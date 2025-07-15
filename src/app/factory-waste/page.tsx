@@ -48,14 +48,16 @@ export default function FactoryWastePage() {
             description: "Limbah pabrik yang tidak berbahaya, berasal dari sisa produksi, mudah dikelola dan dapat dijemput oleh layanan limbah non-B3.",
             imageUrl: "https://placehold.co/360x164.png",
             imageHint: "production waste",
-            href: "#"
+            info: "Limbah produksi non-B3 akan dijemput dan disalurkan ke fasilitas daur ulang atau pengolahan yang sesuai. Pastikan limbah sudah terpisah dari bahan berbahaya.",
+            href: `/disposal-form?title=Non-Hazardous Production Waste&info=${encodeURIComponent("Limbah produksi non-B3 akan dijemput dan disalurkan ke fasilitas daur ulang atau pengolahan yang sesuai. Pastikan limbah sudah terpisah dari bahan berbahaya.")}&backUrl=/factory-waste`
         },
         {
             title: "Hazardous Industrial Waste",
             description: "Mengandung bahan kimia atau zat beracun dari proses industri. Harus dijemput oleh pengelola limbah B3 berizin.",
             imageUrl: "https://placehold.co/360x164.png",
             imageHint: "hazardous waste",
-            href: "#"
+            info: "Limbah B3 (Bahan Berbahaya dan Beracun) memerlukan penanganan khusus oleh tim bersertifikat. Pastikan Anda memiliki MSDS (Material Safety Data Sheet) jika tersedia.",
+            href: `/disposal-form?title=Hazardous Industrial Waste&info=${encodeURIComponent("Limbah B3 (Bahan Berbahaya dan Beracun) memerlukan penanganan khusus oleh tim bersertifikat. Pastikan Anda memiliki MSDS (Material Safety Data Sheet) jika tersedia.")}&backUrl=/factory-waste`
         }
     ];
 

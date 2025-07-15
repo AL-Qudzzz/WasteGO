@@ -1,0 +1,171 @@
+
+'use client';
+
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { ArrowLeft, Info, Camera, CheckCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Card, CardContent } from "@/components/ui/card";
+import { BottomNav } from '@/components/layout/bottom-nav';
+import { useState, Suspense } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { AppHeader } from '@/components/layout/app-header';
+import { Skeleton } from '@/components/ui/skeleton';
+
+function DisposalFormContent() {
+    const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+    const router = useRouter();
+    const searchParams = useSearchParams();
+
+    const title = searchParams.get('title') || 'Limbah';
+    const info = searchParams.get('info') || 'Harap pastikan limbah dalam kondisi siap diangkut.';
+    const backUrl = searchParams.get('backUrl') || '/';
+
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        localStorage.setItem('submissionMade', 'true');
+        setIsSuccessModalOpen(true);
+        (event.target as HTMLFormElement).reset();
+    };
+
+    const handleViewStatus = () => {
+        setIsSuccessModalOpen(false);
+        router.push('/submission-status');
+    };
+
+    const handleCancel = () => {
+        router.back();
+    };
+
+    return (
+        <div className="flex flex-col min-h-screen bg-muted/20 text-foreground font-sans">
+            <AppHeader />
+            <main className="flex-grow p-4 pb-24 overflow-y-auto">
+                <Link href={backUrl} className="flex items-center gap-2 mb-4 text-sm text-foreground font-medium">
+                    <ArrowLeft className="w-4 h-4" />
+                    Kembali
+                </Link>
+                <h1 className="text-2xl font-bold text-foreground mb-4">{title}</h1>
+
+                <Card className="bg-card shadow-lg rounded-2xl">
+                    <CardContent className="p-4 sm:p-6">
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                            <Alert className="bg-primary/10 border-primary/20">
+                                <Info className="h-5 w-5 text-primary" />
+                                <AlertTitle className="font-bold text-primary">Informasi Penting</AlertTitle>
+                                <AlertDescription className="text-primary/90">
+                                    {info}
+                                </AlertDescription>
+                            </Alert>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="address" className="font-semibold text-foreground">Alamat Penjemputan *</Label>
+                                <Textarea id="address" placeholder="Masukkan alamat lengkap Anda" required className="bg-background" />
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="photo-upload" className="font-semibold text-foreground">Upload foto limbah</Label>
+                                <div 
+                                    className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-md cursor-pointer hover:border-primary"
+                                    onClick={() => document.getElementById('photo-upload-input')?.click()}
+                                >
+                                    <div className="space-y-1 text-center">
+                                        <Camera className="mx-auto h-12 w-12 text-muted-foreground" />
+                                        <p className="text-sm text-primary font-semibold">
+                                            Klik untuk upload foto
+                                        </p>
+                                        <p className="text-xs text-muted-foreground">
+                                            Format: JPG, PNG (Max 5MB)
+                                        </p>
+                                    </div>
+                                </div>
+                                <Input id="photo-upload-input" type="file" accept="image/jpeg,image/png" className="hidden" />
+                            </div>
+                            
+                            <div className="space-y-2">
+                                <Label htmlFor="weight" className="font-semibold text-foreground">Estimasi Berat (kg) *</Label>
+                                <Input id="weight" type="number" placeholder="Contoh: 10" required className="bg-background" />
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="description" className="font-semibold text-foreground">Deskripsi Limbah *</Label>
+                                <Textarea id="description" placeholder="Deskripsikan kondisi limbah Anda..." required className="bg-background" />
+                            </div>
+
+                            <div className="flex flex-col gap-3 pt-4">
+                                <Button type="button" variant="secondary" onClick={handleCancel} className="bg-muted hover:bg-muted/90">Batal</Button>
+                                <Button type="submit" className="bg-primary hover:bg-primary/90">Kirim Data</Button>
+                            </div>
+                        </form>
+                    </CardContent>
+                </Card>
+            </main>
+            <Dialog open={isSuccessModalOpen} onOpenChange={setIsSuccessModalOpen}>
+                <DialogContent className="sm:max-w-md p-8 rounded-[5px]">
+                    <div className="flex flex-col items-center text-center space-y-4">
+                        <div className="bg-primary text-primary-foreground rounded-full p-4">
+                            <CheckCircle className="h-12 w-12" />
+                        </div>
+                        <DialogHeader className="space-y-2">
+                            <DialogTitle className="text-2xl font-bold text-foreground">Data Berhasil Dikirim!</DialogTitle>
+                            <DialogDescription className="text-muted-foreground">
+                            Transaksi Anda dalam proses verifikasi
+                            </DialogDescription>
+                        </DialogHeader>
+                        <Button className="w-full bg-primary hover:bg-primary/90" onClick={handleViewStatus}>
+                            Lihat status Pengajuan
+                        </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
+            <BottomNav />
+        </div>
+    );
+}
+
+const LoadingSkeleton = () => (
+    <div className="flex flex-col min-h-screen bg-muted/20 text-foreground font-sans">
+        <AppHeader />
+        <main className="flex-grow p-4 pb-24 overflow-y-auto">
+            <Skeleton className="h-6 w-32 mb-4" />
+            <Skeleton className="h-8 w-48 mb-6" />
+            <Card className="bg-card shadow-lg rounded-2xl">
+                <CardContent className="p-4 sm:p-6 space-y-6">
+                    <Skeleton className="h-24 w-full" />
+                    <div className="space-y-2">
+                        <Skeleton className="h-4 w-40" />
+                        <Skeleton className="h-20 w-full" />
+                    </div>
+                    <div className="space-y-2">
+                        <Skeleton className="h-4 w-40" />
+                        <Skeleton className="h-32 w-full" />
+                    </div>
+                    <div className="space-y-2">
+                        <Skeleton className="h-4 w-48" />
+                        <Skeleton className="h-10 w-full" />
+                    </div>
+                </CardContent>
+            </Card>
+        </main>
+        <BottomNav />
+    </div>
+);
+
+
+export default function DisposalFormPage() {
+    return (
+        <Suspense fallback={<LoadingSkeleton />}>
+            <DisposalFormContent />
+        </Suspense>
+    );
+}

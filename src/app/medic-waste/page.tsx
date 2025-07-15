@@ -47,13 +47,17 @@ export default function MedicWastePage() {
             title: "Regulated Medical Waste",
             description: "Limbah medis yang berisiko tinggi seperti infeksius, tajam, atau beracun. Harus ditangani oleh pihak berizin dan dijemput oleh jasa pengelola limbah B3 resmi.",
             imageUrl: "https://i.imgur.com/gKEM218.png",
-            imageHint: "medical waste"
+            imageHint: "medical waste",
+            info: "Limbah medis ter-regulasi (B3) memerlukan penanganan khusus oleh tim bersertifikat. Pastikan limbah dikemas dalam wadah khusus yang aman dan diberi label.",
+            href: `/disposal-form?title=Regulated Medical Waste&info=${encodeURIComponent("Limbah medis ter-regulasi (B3) memerlukan penanganan khusus oleh tim bersertifikat. Pastikan limbah dikemas dalam wadah khusus yang aman dan diberi label.")}&backUrl=/medic-waste`
         },
         {
             title: "Non-Hazardous Medical Waste",
             description: "Limbah medis ringan yang tidak berbahaya dan tidak terkontaminasi. Bisa dikumpulkan melalui sistem antar-jemput biasa dengan perlakuan terpisah.",
             imageUrl: "https://i.imgur.com/9C8YfEa.png",
-            imageHint: "medical supplies"
+            imageHint: "medical supplies",
+            info: "Limbah medis non-B3 seperti perban bekas atau sarung tangan akan dijemput oleh layanan kami. Harap pisahkan dari sampah rumah tangga biasa.",
+            href: `/disposal-form?title=Non-Hazardous Medical Waste&info=${encodeURIComponent("Limbah medis non-B3 seperti perban bekas atau sarung tangan akan dijemput oleh layanan kami. Harap pisahkan dari sampah rumah tangga biasa.")}&backUrl=/medic-waste`
         }
     ];
 
@@ -90,7 +94,9 @@ export default function MedicWastePage() {
                                         <p className="text-center text-sm text-muted-foreground flex-grow">
                                            {waste.description}
                                         </p>
-                                        <Button className="w-full mt-auto">Salurkan</Button>
+                                        <Button asChild className="w-full mt-auto">
+                                            <Link href={waste.href}>Salurkan</Link>
+                                        </Button>
                                     </CardContent>
                                 </Card>
                             </CarouselItem>

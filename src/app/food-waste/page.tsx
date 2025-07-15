@@ -48,14 +48,16 @@ export default function FoodWastePage() {
             description: "Makanan yang sudah tidak aman untuk dikonsumsi dan akan disalurkan ke pengelola limbah untuk didaur ulang menjadi kompos atau biogas",
             imageUrl: "https://placehold.co/360x164.png",
             imageHint: "food scraps",
-            href: "#"
+            info: "Makanan yang tidak layak konsumsi akan diolah menjadi kompos atau biogas. Pastikan tidak ada bahan non-organik seperti plastik yang tercampur.",
+            href: `/disposal-form?title=Inedible Food&info=${encodeURIComponent("Makanan yang tidak layak konsumsi akan diolah menjadi kompos atau biogas. Pastikan tidak ada bahan non-organik seperti plastik yang tercampur.")}&backUrl=/food-waste`
         },
         {
             title: "Edible Food",
             description: "Salurkan Makanan berlebih yang masih layak ke bank makanan dapur umum, atau pihak yang membutuhkan",
             imageUrl: "https://placehold.co/360x164.png",
             imageHint: "donuts pastries",
-            href: "#"
+            info: "Makanan layak konsumsi akan disalurkan ke mitra food bank kami. Pastikan makanan belum kedaluwarsa dan dikemas dengan higienis.",
+            href: `/disposal-form?title=Edible Food&info=${encodeURIComponent("Makanan layak konsumsi akan disalurkan ke mitra food bank kami. Pastikan makanan belum kedaluwarsa dan dikemas dengan higienis.")}&backUrl=/food-waste`
         }
     ];
 

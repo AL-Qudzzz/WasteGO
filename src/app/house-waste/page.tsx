@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -47,7 +48,8 @@ export default function HouseWastePage() {
             description: "Minyak goreng sisa pemakaian Harus dikemas dengan aman dan tidak dibuang ke sembarang tempat seperti saluran air",
             imageUrl: "https://placehold.co/360x164.png",
             imageHint: "cooking oil",
-            href: "#"
+            info: "Minyak jelantah akan ditangani oleh mitra khusus untuk didaur ulang. Harap kemas dalam wadah tertutup rapat dan tidak bocor.",
+            href: `/disposal-form?title=Used Cooking Oil&info=${encodeURIComponent("Minyak jelantah akan ditangani oleh mitra khusus untuk didaur ulang. Harap kemas dalam wadah tertutup rapat dan tidak bocor.")}&backUrl=/house-waste`
         },
         {
             title: "Discarded Furniture",
