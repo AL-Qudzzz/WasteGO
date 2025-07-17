@@ -76,7 +76,7 @@ export function BottomNav() {
 
   if (loading) {
     return (
-      <footer className="fixed bottom-0 left-0 right-0 bg-nav-background text-nav-foreground shadow-t-lg z-50 md:hidden">
+      <footer className="fixed bottom-0 left-0 right-0 bg-nav-background text-nav-foreground shadow-t-lg z-50">
         <div className="flex justify-around items-center h-16">
           <Skeleton className="w-12 h-10 rounded-md bg-gray-700" />
           <Skeleton className="w-12 h-10 rounded-md bg-gray-700" />
@@ -87,7 +87,7 @@ export function BottomNav() {
   }
 
   return (
-    <footer className="fixed bottom-0 left-0 right-0 bg-nav-background text-nav-foreground shadow-t-lg z-50 md:hidden">
+    <footer className="fixed bottom-0 left-0 right-0 bg-nav-background text-nav-foreground shadow-t-lg z-50 transition-transform duration-300">
       <TooltipProvider>
         <div className="flex justify-around items-center h-16">
           {navItems.map((item, index) => (

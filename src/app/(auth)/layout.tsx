@@ -223,7 +223,7 @@ export default function DashboardLayout({
               handleLogout={logout}
             />
           </header>
-          <main className="flex-1 p-4 sm:p-6 lg:p-8 bg-background pb-24 md:pb-8">
+          <main className="flex-1 p-4 sm:p-6 lg:p-8 bg-background pb-24 transition-all duration-300">
             {children}
           </main>
           <div>
