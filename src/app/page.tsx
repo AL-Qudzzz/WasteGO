@@ -84,30 +84,32 @@ export default function Home() {
     return (
       <div className="flex flex-col min-h-screen bg-background text-foreground font-sans">
         <AppHeader />
-        <main className="flex-grow px-4 pb-24">
-          <Skeleton className="relative h-48 rounded-2xl mb-6" />
-          
-          <div className="grid grid-cols-3 gap-3 mb-4">
-            {[...Array(6)].map((_, index) => (
-                <Card key={index} className="bg-primary/10 shadow-md rounded-2xl animate-pulse">
-                    <CardContent className="flex flex-col items-center justify-center p-2 text-center h-full aspect-square">
-                        <Skeleton className="bg-muted rounded-full p-3 mb-2 w-14 h-14" />
-                        <Skeleton className="h-4 w-16 bg-muted" />
-                    </CardContent>
-                </Card>
-            ))}
-          </div>
+        <main className="flex-grow px-4 pb-24 md:pb-8">
+         <div className="max-w-4xl mx-auto">
+            <Skeleton className="relative h-48 rounded-2xl mb-6" />
+            
+            <div className="grid grid-cols-3 gap-3 mb-4">
+                {[...Array(6)].map((_, index) => (
+                    <Card key={index} className="bg-primary/10 shadow-md rounded-2xl animate-pulse">
+                        <CardContent className="flex flex-col items-center justify-center p-2 text-center h-full aspect-square">
+                            <Skeleton className="bg-muted rounded-full p-3 mb-2 w-14 h-14" />
+                            <Skeleton className="h-4 w-16 bg-muted" />
+                        </CardContent>
+                    </Card>
+                ))}
+            </div>
 
-          <div className="grid grid-cols-2 gap-4 mb-6">
-             <Skeleton className="h-12 rounded-lg bg-muted" />
-             <Skeleton className="h-12 rounded-lg bg-muted" />
-          </div>
+            <div className="grid grid-cols-2 gap-4 mb-6">
+               <Skeleton className="h-12 rounded-lg bg-muted" />
+               <Skeleton className="h-12 rounded-lg bg-muted" />
+            </div>
 
-          <div className="space-y-3">
-              {[...Array(3)].map((_, index) => (
-                  <Skeleton key={index} className="h-16 rounded-lg bg-muted" />
-              ))}
-          </div>
+            <div className="space-y-3">
+                {[...Array(3)].map((_, index) => (
+                    <Skeleton key={index} className="h-16 rounded-lg bg-muted" />
+                ))}
+            </div>
+         </div>
         </main>
         
         <BottomNav />
@@ -118,7 +120,8 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground font-sans">
         <AppHeader />
-        <main className="flex-grow px-4 pb-24">
+        <main className="flex-grow px-4 pb-24 md:pb-8">
+          <div className="max-w-4xl mx-auto">
             <div className="relative h-48 rounded-2xl overflow-hidden mb-6 shadow-md">
                 <Image src="https://i.imgur.com/CABdaYA.png" fill alt="Selamat Datang" data-ai-hint="recycling hands" className="object-cover" />
                 <div className="absolute inset-0 bg-black bg-opacity-30 flex flex-col justify-end p-4">
@@ -127,7 +130,7 @@ export default function Home() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-3 mb-4">
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-3 mb-4">
                 {categories.map((category, index) => (
                     <Link href={category.href} key={index}>
                         <Card className="bg-primary text-primary-foreground shadow-md hover:bg-primary/90 transition-colors rounded-2xl">
@@ -171,6 +174,7 @@ export default function Home() {
                     </Link>
                 ))}
             </div>
+          </div>
         </main>
         
         <BottomNav />
