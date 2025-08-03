@@ -10,6 +10,8 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
+    unoptimized: true,
+    domains: ['placehold.co', 'i.imgur.com'],
     remotePatterns: [
       {
         protocol: 'https',
