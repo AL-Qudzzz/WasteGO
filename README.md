@@ -1,6 +1,17 @@
 # WasteGo
 
-WasteGo is a comprehensive platform designed to streamline waste management and promote environmental responsibility. By connecting users with waste collection services, facilitating responsible disposal of various waste types, and providing tools for tracking environmental impact, WasteGo aims to create a cleaner and more sustainable future.
+WasteGo is a comprehensive platform designed to streamline waste management and promote envir/
+├── src/
+│   ├── app/                # Next.js App Router: pages and layouts
+│   ├── components/         # Reusable UI components (ShadCN, custom)
+│   ├── context/            # React context providers (e.g., AuthContext)
+│   ├── lib/                # Helper functions, Firebase config, actions
+│   ├── ai/                 # Genkit flows and AI-related logic
+│   └── hooks/             # Custom React hooks
+├── public/                 # Static assets
+├── android/               # Android platform specific files
+├── resources/             # App resources (icons, splash screens)
+└── ...                    # Configuration filesesponsibility. By connecting users with waste collection services, facilitating responsible disposal of various waste types, and providing tools for tracking environmental impact, WasteGo aims to create a cleaner and more sustainable future.
 
 ## Table of Contents
 - [Core Features](#core-features)
@@ -30,6 +41,7 @@ WasteGo is a comprehensive platform designed to streamline waste management and 
 - **AI Integration:** [Google AI & Genkit](https://firebase.google.com/docs/genkit)
 - **Backend & Database:** [Firebase (Firestore, Authentication, Storage)](https://firebase.google.com/)
 - **Maps:** [OpenStreetMap](https://www.openstreetmap.org/) with [React-Leaflet](https://react-leaflet.js.org/)
+- **Mobile:** [Capacitor](https://capacitorjs.com/) for Android/iOS deployment
 
 ## Getting Started
 
@@ -70,6 +82,33 @@ Follow these instructions to get a copy of the project up and running on your lo
     npm run dev
     ```
     The application will be available at `http://localhost:3000`.
+
+5.  **Build for production:**
+    ```bash
+    npm run build
+    ```
+    This will create a static export in the `out` directory.
+
+6.  **Build for Android:**
+    ```bash
+    # Install Capacitor
+    npm install @capacitor/core @capacitor/android
+    
+    # Initialize Capacitor
+    npx cap init
+    
+    # Add Android platform
+    npx cap add android
+    
+    # Build the web app
+    npm run build
+    
+    # Sync the build with Android
+    npx cap sync android
+    
+    # Open in Android Studio
+    npx cap open android
+    ```
 
 ## Project Structure
 
