@@ -1,17 +1,6 @@
 # WasteGo
 
-WasteGo is a comprehensive platform designed to streamline waste management and promote envir/
-├── src/
-│   ├── app/                # Next.js App Router: pages and layouts
-│   ├── components/         # Reusable UI components (ShadCN, custom)
-│   ├── context/            # React context providers (e.g., AuthContext)
-│   ├── lib/                # Helper functions, Firebase config, actions
-│   ├── ai/                 # Genkit flows and AI-related logic
-│   └── hooks/             # Custom React hooks
-├── public/                 # Static assets
-├── android/               # Android platform specific files
-├── resources/             # App resources (icons, splash screens)
-└── ...                    # Configuration filesesponsibility. By connecting users with waste collection services, facilitating responsible disposal of various waste types, and providing tools for tracking environmental impact, WasteGo aims to create a cleaner and more sustainable future.
+WasteGo is a comprehensive platform designed to streamline waste management and promote environmental responsibility. By connecting users with waste collection services, facilitating responsible disposal of various waste types, and providing tools for tracking environmental impact, WasteGo aims to create a cleaner and more sustainable future.
 
 ## Table of Contents
 - [Core Features](#core-features)
